@@ -33,7 +33,8 @@ if (!$row) {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">Name:<?= htmlspecialchars($row['firstname']) ?></h2>
+                    <h2 class="heading-section">Name:<?= htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) ?></h2>
+
                 </div>
             </div>
             <div class="row">
@@ -96,3 +97,4 @@ if (!$row) {
                             </tbody>
                         </table>
                         <a href="add_course.php?student_id=<?= urlencode($row['id']) ?>"><button class=" btn btn-warning">ADD MORE COURSE</button></a>
+                        <a href="crud_display.php"><button class=" btn btn-warning">Back to students Enrolled</button></a>

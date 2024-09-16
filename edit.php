@@ -1,52 +1,53 @@
   <?php
-  include 'config.php';
+    include 'config.php';
 
-  if (isset($_GET['id'])) {
-      $id = $_GET['id'];
-      $sql = "SELECT s.*, sc.course_id FROM students s LEFT JOIN student_course sc ON s.id = sc.student_id WHERE s.id = ?";
-      $stmt = $conn->prepare($sql);
-      $stmt->bind_param("i", $id);
-      $stmt->execute();
-      $result = $stmt->get_result();
-      if ($result->num_rows > 0) {
-          $row = $result->fetch_assoc();
-      } else {
-          echo "No record found";
-          exit();
-      }
-  }
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $sql = "SELECT s.*, sc.course_id FROM students s LEFT JOIN student_course sc ON s.id = sc.student_id WHERE s.id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+        } else {
+            echo "No record found";
+            exit();
+        }
+    }
 
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $id = $_POST['id'];
-      $firstname = $_POST['firstname'];
-      $lastname = $_POST['lastname'];
-      $email = $_POST['email'];
-      $phone = $_POST['phone'];
-      $address = $_POST['address'];
-      $gender = $_POST['gender'];
-      $wanted_course = $_POST['wanted_course'];
-    
-      $sql = "UPDATE students SET firstname=?, lastname=?, email=?, phone=?, address=?, gender=? WHERE id=?";
-      $stmt = $conn->prepare($sql);
-      $stmt->bind_param("ssssssi", $firstname, $lastname, $email, $phone, $address, $gender, $id);
-    
-      if ($stmt->execute()) {
-          $sql_course = "UPDATE student_course SET course_id=? WHERE student_id=?";
-          $stmt_course = $conn->prepare($sql_course);
-          $stmt_course->bind_param("ii", $wanted_course, $id);
-        
-          if ($stmt_course->execute()) {
-              $_SESSION['success_message'] = "Record updated successfully";
-              header("Location: crud_display.php");
-              exit();
-          } else {
-              echo "Error updating course: " . $conn->error;
-          }
-      } else {
-          echo "Error updating record: " . $conn->error;
-      }
-  }
-  ?>
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $id = $_POST['id'];
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $address = $_POST['address'];
+        $gender = $_POST['gender'];
+        $wanted_course = $_POST['wanted_course'];
+
+        $sql = "UPDATE students SET firstname=?, lastname=?, email=?, phone=?, address=?, gender=? WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssi", $firstname, $lastname, $email, $phone, $address, $gender, $id);
+
+        if ($stmt->execute()) {
+            // Update the student_course table
+            $sql_course = "UPDATE student_course SET course_id=? WHERE student_id=?";
+            $stmt_course = $conn->prepare($sql_course);
+            $stmt_course->bind_param("ii", $wanted_course, $id);
+
+            if ($stmt_course->execute()) {
+                $_SESSION['success_message'] = "Record updated successfully";
+                header("Location: crud_display.php");
+                exit();
+            } else {
+                echo "Error updating course: " . $conn->error;
+            }
+        } else {
+            echo "Error updating student: " . $conn->error;
+        }
+    }
+    ?>
 
   <!doctype html>
   <html lang="en">
@@ -75,14 +76,14 @@
                                   <div class="mb-4">
                                       <h2>Edit Student Registration</h2>
                                       <?php
-                                      if (isset($_SESSION['success_message'])) {
-                                          echo "<div class='alert alert-success'>" . $_SESSION['success_message'] . "</div>";
-                                          unset($_SESSION['success_message']);
-                                      }
-                                      if (isset($error_message)) {
-                                          echo "<div class='alert alert-danger'>" . $error_message . "</div>";
-                                      }
-                                      ?>
+                                        if (isset($_SESSION['success_message'])) {
+                                            echo "<div class='alert alert-success'>" . $_SESSION['success_message'] . "</div>";
+                                            unset($_SESSION['success_message']);
+                                        }
+                                        if (isset($error_message)) {
+                                            echo "<div class='alert alert-danger'>" . $error_message . "</div>";
+                                        }
+                                        ?>
                                       <form action="edit.php" method="post">
                                           <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                           <div class="form-group">
@@ -109,38 +110,23 @@
                                               <label>Gender</label>
                                               <div class="gender-options">
                                                   <div class="form-check">
-                                                      <input type="radio"   id="male"  name="gender" value="male" <?php if($row['gender'] == 'male') echo 'checked'; ?> required>
+                                                      <input type="radio" id="male" name="gender" value="male" <?php if ($row['gender'] == 'male') echo 'checked'; ?> required>
                                                       <label for="male">Male</label>
                                                   </div>
                                                   <div class="form-check">
-                                                      <input type="radio" id="female" name="gender" value="female" <?php if($row['gender'] == 'female') echo 'checked'; ?> required>
+                                                      <input type="radio" id="female" name="gender" value="female" <?php if ($row['gender'] == 'female') echo 'checked'; ?> required>
                                                       <label for="female">Female</label>
                                                   </div>
                                                   <div class="form-check">
-                                                      <input type="radio" id="other" name="gender" value="other" <?php if($row['gender'] == 'other') echo 'checked'; ?> required>
+                                                      <input type="radio" id="other" name="gender" value="other" <?php if ($row['gender'] == 'other') echo 'checked'; ?> required>
                                                       <label for="other">Other</label>
                                                   </div>
                                               </div>
                                           </div>
-                                          <div class="form-group">
-                                              <label>Wanted Course</label>
-                                              <?php
-                                              $sql = "SELECT * FROM it_course";
-                                              $result = $conn->query($sql);
 
-                                              if ($result->num_rows > 0) {
-                                                  while ($course = $result->fetch_assoc()) {
-                                                      echo "<div class='form-check'>";
-                                                      echo "<input type='radio' id='course_" . htmlspecialchars($course["id"]) . "' name='wanted_course' value='" . htmlspecialchars($course["id"]) . "' " . ($row['course_id'] == $course['id'] ? 'checked' : '') . " required>";
-                                                      echo "<label for='course_" . htmlspecialchars($course["id"]) . "'>" . htmlspecialchars($course["title"]) . "</label>";
-                                                      echo "</div>";
-                                                  }
-                                              }
-                                              ?>
-                                          </div>
-                                          <button type="submit" class="btn btn-primary">Update</button>
-                                      </form>
                                   </div>
+                                  <button type="submit" class="btn btn-primary">Update</button>
+                                  </form>
                               </div>
                           </div>
                       </div>
@@ -148,10 +134,12 @@
               </div>
           </div>
       </div>
+      </div>
 
       <script src="js/jquery-3.3.1.min.js"></script>
       <script src="js/popper.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
       <script src="js/main.js"></script>
   </body>
+
   </html>
