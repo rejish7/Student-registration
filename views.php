@@ -71,17 +71,21 @@ if (!$row) {
                                             <td scope="row"><?= htmlspecialchars($row1['duration']) ?></td>
                                             <td scope="row"><?= htmlspecialchars($row1['price']) ?></td>
                                             <td>
-                                                <a href="viewsedit.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>">
-                                                    <button class="btn btn-primary">Edit</button>
+                                                <a href="viewsedit.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>" class="btn btn-primary btn-sm mr-2">
+                                                    <i class="fa fa-edit"></i> Edit
                                                 </a>
-                                                <a href="viewsdelete.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>" onclick="return confirm('Are you sure you want to delete this record?')">
-                                                    <button class="btn btn-danger">Delete</button>
+                                                <a href="viewsdelete.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">
+                                                    <i class="fa fa-trash"></i> Delete
                                                 </a>
                                             </td>
 
                                             <td>
-                                                <a href="addpayment.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>"><button class="btn btn-primary ">Add payment</button></a>
-                                                <a href="paymentviews.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>"><button class="btn btn-success">Views</button></a>
+                                                <a href="addpayment.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>" class="btn btn-primary btn-sm">
+                                                    <i class="fa fa-plus"></i> Add payment
+                                                </a>
+                                                <a href="paymentviews.php?id=<?php echo urlencode($row['id']); ?>&scid=<?php echo urlencode($row1['scid']); ?>" class="btn btn-success btn-sm">
+                                                    <i class="fa fa-eye"></i> View
+                                                </a>
                                             </td>
                                         </tr>
                                     <?php
@@ -96,5 +100,5 @@ if (!$row) {
                                 ?>
                             </tbody>
                         </table>
-                        <a href="add_course.php?student_id=<?= urlencode($row['id']) ?>"><button class=" btn btn-warning">ADD MORE COURSE</button></a>
-                        <a href="crud_display.php"><button class=" btn btn-warning">Back to students Enrolled</button></a>
+                        <a href="crud_display.php" ><i class="fa fa-arrow-left"></i> Back to students Enrolled</a>
+                        <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-warning"><i class="fa fa-plus"></i> ADD MORE COURSE</a>

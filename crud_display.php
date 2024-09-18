@@ -1,5 +1,7 @@
 <?php
 include 'config.php';
+include 'navbar.php';
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,7 +23,7 @@ include 'config.php';
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
+                <div class="col-md-6 text-center mb-3">
                     <h2 class="heading-section">Registered Students</h2>
                 </div>
             </div>
@@ -59,12 +61,12 @@ include 'config.php';
                                         <th scope="row"><?= htmlspecialchars($row['address']) ?></th>
                                         <th scope="row"><?= htmlspecialchars($row['gender']) ?></th>
                                             <th>
-                                                <a href="views.php?id=<?= $row['id'] ?>"><button class="btn btn-success">View</button></a>
-                                                <a href="add_course.php?student_id=<?= urlencode($row['id']) ?>"><button class=" btn btn-warning">ADD COURSE</button></a>
+                                                <a href="views.php?id=<?= $row['id'] ?>"><i class="fa fa-eye btn btn-success"></i></a>
+                                                <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>"><i class="fa fa-plus-circle btn btn-warning"></i></a>
                                             </th>
                                             <th>
-                                                <a href="edit.php?id=<?= $row['id'] ?>"><button class="btn btn-primary">Edit</button></a><br>
-                                                <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this record?')"> <button class="btn btn-danger">Delete</button></a>
+                                                <a href="edit.php?id=<?= $row['id'] ?>"><i class="fa fa-edit btn btn-primary"></i></a>
+                                                <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this record?')"><i class="fa fa-trash btn btn-danger"></i></a>
                                             </th>
                                         </tr>
                                     <?php

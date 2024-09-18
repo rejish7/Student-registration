@@ -9,18 +9,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $amount = floatval($_POST['paid_amount']);
     $payment_date = $_POST['payment_date'];
 
-    $sql = "INSERT INTO payments (student_course_id, amount, payment_date) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ids", $student_course_id, $amount, $payment_date);
+    $sql_check = "SELECT c.price, IFNULL(SUM(p.amount), 0) as total_paid 
+                  FROM student_course sc
+                  JOIN it_course c ON c.id = sc.course_id
+                  LEFT JOIN payments p ON p.student_course_id = sc.id
+                  WHERE sc.id = ?
+                  GROUP BY sc.id";
+    $stmt_check = $conn->prepare($sql_check);
+    $stmt_check->bind_param("i", $student_course_id);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+    $row_check = $result_check->fetch_assoc();
     
-    if ($stmt->execute()) {
-        header("Location: paymentviews.php?id=" . $id . "&scid=" . $scid);
-        exit();
+    $course_price = $row_check['price'];
+    $total_paid = $row_check['total_paid'];
+    $remaining_amount = $course_price - $total_paid;
+
+    if ($amount <= $remaining_amount) {
+        $sql = "INSERT INTO payments (student_course_id, amount, payment_date) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ids", $student_course_id, $amount, $payment_date);
+        
+        if ($stmt->execute()) {
+            header("Location: paymentviews.php?id=" . $id . "&scid=" . $scid);
+            exit();
+        } else {
+            echo "Error adding payment: " . $stmt->error;
+        }
+
+        $stmt->close();
     } else {
-        echo "Error adding payment: " . $stmt->error;
+        echo "Error: Payment amount exceeds the remaining balance.";
     }
 
-    $stmt->close();
+    $stmt_check->close();
 }
 
 $sql = "SELECT sc.*, s.firstname, s.lastname, c.title, c.duration, c.price 
@@ -39,6 +61,16 @@ if ($result->num_rows == 0) {
 
 $row = $result->fetch_assoc();
 $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
+
+
+$sql_balance = "SELECT IFNULL(SUM(amount), 0) as total_paid FROM payments WHERE student_course_id = ?";
+$stmt_balance = $conn->prepare($sql_balance);
+$stmt_balance->bind_param("i", $scid);
+$stmt_balance->execute();
+$result_balance = $stmt_balance->get_result();
+$row_balance = $result_balance->fetch_assoc();
+$total_paid = $row_balance['total_paid'];
+$remaining_balance = $row['price'] - $total_paid;
 ?>
 
 <!doctype html>
@@ -54,7 +86,6 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="css/style.css">
-
 </head>
 
 <body>
@@ -84,15 +115,20 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
                                 <label>Price: <?= htmlspecialchars($row['price']) ?></label>
                             </div>
                             <div class="form-group">
+                                <label>Remaining To Pay Balance: <?= number_format($remaining_balance, 2) ?></label>
+                            </div>
+                            <div class="form-group">
                                 <label for="paid_amount">Amount:</label>
-                                <input type="number" id="paid_amount" name="paid_amount" step="0.01" min="0" required>
+                                <input type="number" id="paid_amount" name="paid_amount" step="0.01" min="0" max="<?= $remaining_balance ?>" required class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="payment_date">Payment Date:</label>
-                                <input type="date" id="payment_date" name="payment_date" required>
+                                <input type="date" id="payment_date" name="payment_date" required class="form-control">
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="Add Payment" class="btn btn-success">
+                                <button type="submit" class="btn-submit" <?= $remaining_balance <= 0 ? 'disabled' : '' ?>>
+                                    <i class="fa fa-plus-circle"></i> Add Payment
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -105,5 +141,6 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
 
 <?php
 $stmt->close();
+$stmt_balance->close();
 $conn->close(); 
 ?>

@@ -59,10 +59,11 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
                                     <th scope="col">Course name</th>
                                     <th scope="col">Duration</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col"> Paid Amount</th>
                                     <th scope="col">Remaining Amount</th>
                                     <th scope="col">Payment Date</th>
                                     <th scope="col">Action</th>
+                                    <th scope="col">Add Payment</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -102,6 +103,10 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
                                                 <button class="btn btn-danger">Delete</button>
                                             </a>
                                         </td>
+                                        <td>
+                                        <a href="addpayment.php?id=<?= urlencode($id) ?>&scid=<?= urlencode($scid) ?>"><button class="btn btn-success">Add New Payment</button></a>
+
+                                        </td>
                                     </tr>
                                 <?php
                                     }
@@ -115,7 +120,6 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
                                 ?>
                             </tbody>
                         </table>
-                        <a href="addpayment.php?id=<?= urlencode($id) ?>&scid=<?= urlencode($scid) ?>"><button class="btn btn-success">Add New Payment</button></a>
                         <a href="views.php?id=<?= urlencode($id) ?>"><button class="btn btn-info">Back to Student Details</button></a>
                     </div>
                 </div>
