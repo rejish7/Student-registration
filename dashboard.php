@@ -29,7 +29,6 @@
                                   <h3>Welcome,User</h3>
                               </div>
                               <div class="col-md-6 text-right">
-                                  <a href="#logout.php" class="btn btn-primary"><i class="fa fa-sign-out"></i> Logout</a>
                               </div>
                           </div>
                           <div class="row">
