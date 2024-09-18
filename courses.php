@@ -37,7 +37,7 @@
                         echo "<a href='delete_course.php?id=" . urlencode($course['id']) . "' class='btn btn-danger mt-3'>Delete Course</a>";
 
                         echo "<a href='update_course.php?id=" . urlencode($course['id']) . "' class='btn btn-warning mt-3 ml-2'>Update Course</a>";
-                        echo "<a href='enrolled_students.php?id=" . urlencode($course['id']) . "&scid=" . urlencode($course['id']) . "' class='btn btn-success mt-3 ml-2'>Enrolled Students</a>";
+                        echo "<a href='enrolled_students.php?id=" . urlencode($course['id']) . "' class='btn btn-success mt-3 ml-2'>Enrolled Students</a>";
                         echo "</div>";
                         echo "</div>";
                     }

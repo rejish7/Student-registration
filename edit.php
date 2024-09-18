@@ -1,20 +1,6 @@
   <?php
     include 'config.php';
-
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $sql = "SELECT s.*, sc.course_id FROM students s LEFT JOIN student_course sc ON s.id = sc.student_id WHERE s.id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-        } else {
-            echo "No record found";
-            exit();
-        }
-    }
+    include 'navbar.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id = $_POST['id'];
@@ -24,28 +10,33 @@
         $phone = $_POST['phone'];
         $address = $_POST['address'];
         $gender = $_POST['gender'];
-        $wanted_course = $_POST['wanted_course'];
 
         $sql = "UPDATE students SET firstname=?, lastname=?, email=?, phone=?, address=?, gender=? WHERE id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssssssi", $firstname, $lastname, $email, $phone, $address, $gender, $id);
 
         if ($stmt->execute()) {
-            // Update the student_course table
-            $sql_course = "UPDATE student_course SET course_id=? WHERE student_id=?";
-            $stmt_course = $conn->prepare($sql_course);
-            $stmt_course->bind_param("ii", $wanted_course, $id);
-
-            if ($stmt_course->execute()) {
-                $_SESSION['success_message'] = "Record updated successfully";
-                header("Location: crud_display.php");
-                exit();
-            } else {
-                echo "Error updating course: " . $conn->error;
-            }
+            $_SESSION['success_message'] = "Record updated successfully";
+            header("Location: crud_display.php");
+            exit();
         } else {
-            echo "Error updating student: " . $conn->error;
+            $error_message = "Error updating record: " . $conn->error;
         }
+    }
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $sql = "SELECT * FROM students WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if (!$row) {
+            $error_message = "Error: Student data not found.";
+        }
+    } else {
+        $error_message = "Error: No student ID provided.";
     }
     ?>
 
@@ -56,7 +47,6 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
       <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="css/style.css">
       <title>Edit Student Registration</title>
@@ -84,6 +74,7 @@
                                             echo "<div class='alert alert-danger'>" . $error_message . "</div>";
                                         }
                                         ?>
+                                      <?php if (isset($row)): ?>
                                       <form action="edit.php" method="post">
                                           <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                           <div class="form-group">
@@ -123,17 +114,18 @@
                                                   </div>
                                               </div>
                                           </div>
-
+                                          <button type="submit" class="btn btn-primary">Update</button>
+                                      </form>
+                                      <?php else: ?>
+                                          <p>Error: Student data not found.</p>
+                                      <?php endif; ?>
                                   </div>
-                                  <button type="submit" class="btn btn-primary">Update</button>
-                                  </form>
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
-      </div>
       </div>
 
       <script src="js/jquery-3.3.1.min.js"></script>
