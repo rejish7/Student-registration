@@ -33,7 +33,8 @@ if (!$row) {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">Name:<?= htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) ?></h2>
+                    <h2 class="heading-section">Name:<?= htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) ?>
+                    </h2>
 
                 </div>
             </div>
@@ -54,9 +55,9 @@ if (!$row) {
                             <tbody>
                                 <?php
                                 $sql = "SELECT *,sc.id as scid FROM student_course AS sc
-         JOIN students AS s ON s.id = sc.student_id 
-         JOIN it_course AS c ON c.id = sc.course_id 
-         WHERE s.id = ?";
+                                JOIN students AS s ON s.id = sc.student_id 
+                                JOIN it_course AS c ON c.id = sc.course_id 
+                                WHERE s.id = ?";
                                 $stmt = $conn->prepare($sql);
                                 $stmt->bind_param("i", $id);
                                 $stmt->execute();
@@ -65,40 +66,46 @@ if (!$row) {
                                 if ($result->num_rows > 0) {
                                     while ($row1 = $result->fetch_assoc()) {
                                 ?>
-                                        <tr>
-                                            <td scope="row"><?= $i++ ?></td>
-                                            <td scope="row"><?= htmlspecialchars($row1['title']) ?></td>
-                                            <td scope="row"><?= htmlspecialchars($row1['duration']) ?></td>
-                                            <td scope="row"><?= htmlspecialchars($row1['price']) ?></td>
-                                            <td>
-                                                <a href="viewsedit.php?id=<?=urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>" class="btn btn-primary btn-sm mr-2">
-                                                    <i class="fa fa-edit"></i> Edit
-                                                </a>
-                                                <a href="viewsdelete.php?id=<?= urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">
-                                                    <i class="fa fa-trash"></i> Delete
-                                                </a>
-                                            </td>
+                                <tr>
+                                    <td scope="row"><?= $i++ ?></td>
+                                    <td scope="row"><?= htmlspecialchars($row1['title']) ?></td>
+                                    <td scope="row"><?= htmlspecialchars($row1['duration']) ?></td>
+                                    <td scope="row"><?= htmlspecialchars($row1['price']) ?></td>
+                                    <td>
+                                        <a href="viewsedit.php?id=<?=urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>"
+                                            class="btn btn-primary btn-sm mr-2">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <a href="viewsdelete.php?id=<?= urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this record?')">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    </td>
 
-                                            <td>
-                                                <a href="addpayment.php?id=<?=urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>" class="btn btn-primary btn-sm">
-                                                    <i class="fa fa-plus"></i> Add payment
-                                                </a>
-                                                <a href="paymentviews.php?id=<?= urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>" class="btn btn-success btn-sm">
-                                                    <i class="fa fa-eye"></i> View
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php
+                                    <td>
+                                        <a href="addpayment.php?id=<?=urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>"
+                                            class="btn btn-primary btn-sm">
+                                            <i class="fa fa-plus"></i> Add payment
+                                        </a>
+                                        <a href="paymentviews.php?id=<?= urlencode($row['id']); ?>&scid=<?= urlencode($row1['scid']); ?>"
+                                            class="btn btn-success btn-sm">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php
                                     }
                                 } else {
                                     ?>
-                                    <tr>
-                                        <td colspan="6">No course enrolled</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="6">No course enrolled</td>
+                                </tr>
                                 <?php
                                 }
                                 ?>
                             </tbody>
                         </table>
-                        <a href="crud_display.php" ><i class="fa fa-arrow-left"></i> Back to students Enrolled</a>
-                        <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-warning"><i class="fa fa-plus"></i> ADD MORE COURSE</a>
+                        <a href="crud_display.php"><i class="fa fa-arrow-left"></i> Back to students Enrolled</a>
+                        <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-warning"><i
+                                class="fa fa-plus"></i> ADD MORE COURSE</a>

@@ -52,24 +52,29 @@ include 'navbar.php';
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) { 
                                         ?>
-						                <tr>
-						                    <th scope="row"><?= $i++ ?></th>
-                                        <th scope="row"><?= htmlspecialchars($row['firstname']) ?></th>
-                                        <th scope="row"><?= htmlspecialchars($row['lastname']) ?></th>
-                                        <th scope="row"><?= htmlspecialchars($row['email']) ?></th>
-                                        <th scope="row"><?= htmlspecialchars($row['phone']) ?></th>
-                                        <th scope="row"><?= htmlspecialchars($row['address']) ?></th>
-                                        <th scope="row"><?= htmlspecialchars($row['gender']) ?></th>
-                                            <th>
-                                                <a href="views.php?id=<?= $row['id'] ?>"><i class="fa fa-eye btn btn-success"></i></a>
-                                                <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>"><i class="fa fa-plus-circle btn btn-warning"></i></a>
-                                            </th>
-                                            <th>
-                                                <a href="edit.php?id=<?= $row['id'] ?>"><i class="fa fa-edit btn btn-primary"></i></a>
-                                                <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure you want to delete this record?')"><i class="fa fa-trash btn btn-danger"></i></a>
-                                            </th>
-                                        </tr>
-                                    <?php
+                                <tr>
+                                    <th scope="row"><?= $i++ ?></th>
+                                    <th scope="row"><?= htmlspecialchars($row['firstname']) ?></th>
+                                    <th scope="row"><?= htmlspecialchars($row['lastname']) ?></th>
+                                    <th scope="row"><?= htmlspecialchars($row['email']) ?></th>
+                                    <th scope="row"><?= htmlspecialchars($row['phone']) ?></th>
+                                    <th scope="row"><?= htmlspecialchars($row['address']) ?></th>
+                                    <th scope="row"><?= htmlspecialchars($row['gender']) ?></th>
+                                    <th>
+                                        <a href="views.php?id=<?= $row['id'] ?>"><i
+                                                class="fa fa-eye btn btn-success"></i></a>
+                                        <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>"><i
+                                                class="fa fa-plus-circle btn btn-warning"></i></a>
+                                    </th>
+                                    <th>
+                                        <a href="edit.php?id=<?= $row['id'] ?>"><i
+                                                class="fa fa-edit btn btn-primary"></i></a>
+                                        <a href="delete.php?id=<?= $row['id'] ?>"
+                                            onclick="return confirm('Are you sure you want to delete this record?')"><i
+                                                class="fa fa-trash btn btn-danger"></i></a>
+                                    </th>
+                                </tr>
+                                <?php
                                     }
                                 } else {
                                     echo "<tr><td colspan='9'>No records found</td></tr>";

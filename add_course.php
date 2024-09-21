@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssd", $title, $duration, $price);
         if ($stmt->execute()) {
-            echo "<script>alert('Course added successfully!'); window.location.href='course.php';</script>";
+            echo "<script>alert('Course added successfully!'); window.location.href='courses.php';</script>";
         } else {
             echo "<script>alert('Error adding course: " . $stmt->error . "');</script>";
         }
@@ -57,4 +57,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </section>
 </body>
+
 </html>

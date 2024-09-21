@@ -1,4 +1,3 @@
-
 <?php
 include 'config.php';
 
@@ -24,9 +23,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-<form method="POST" action="">
-    <input type="hidden" name="id" value="<?php echo $id; ?>">
-    <p>Are you sure you want to delete this course?</p>
-    <input type="submit" value="Delete">
-    <a href="courses.php">Cancel</a>
-</form>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+
+    <form method="POST" action="">
+        <input type="hidden" name="id" value="<?php echo $id; ?>">
+        <p>Are you sure you want to delete this course?</p>
+        <input type="submit" value="Delete">
+        <a href="courses.php">Cancel</a>
+    </form>

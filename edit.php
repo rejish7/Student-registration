@@ -1,4 +1,4 @@
-  <?php
+<?php
     include 'config.php';
     include 'navbar.php';
 
@@ -75,47 +75,47 @@
                                         }
                                         ?>
                                       <?php if (isset($row)): ?>
-                                      <form action="edit.php" method="post">
-                                          <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                          <div class="form-group">
-                                              <label for="firstname">First Name</label>
-                                              <input type="text" class="form-control" name="firstname" value="<?php echo $row['firstname']; ?>" required>
-                                          </div>
-                                          <div class="form-group">
-                                              <label for="lastname">Last Name</label>
-                                              <input type="text" class="form-control" name="lastname" value="<?php echo $row['lastname']; ?>" required>
-                                          </div>
-                                          <div class="form-group">
-                                              <label for="email">Email</label>
-                                              <input type="email" class="form-control" name="email" value="<?php echo $row['email']; ?>" required>
-                                          </div>
-                                          <div class="form-group">
-                                              <label for="phone">Phone</label>
-                                              <input type="tel" class="form-control" name="phone" value="<?php echo $row['phone']; ?>" required>
-                                          </div>
-                                          <div class="form-group">
-                                              <label for="address">Address</label>
-                                              <input type="text" class="form-control" name="address" value="<?php echo $row['address']; ?>" required>
-                                          </div>
-                                          <div class="form-group">
-                                              <label>Gender</label>
-                                              <div class="gender-options">
-                                                  <div class="form-check">
-                                                      <input type="radio" id="male" name="gender" value="male" <?php if ($row['gender'] == 'male') echo 'checked'; ?> required>
-                                                      <label for="male">Male</label>
-                                                  </div>
-                                                  <div class="form-check">
-                                                      <input type="radio" id="female" name="gender" value="female" <?php if ($row['gender'] == 'female') echo 'checked'; ?> required>
-                                                      <label for="female">Female</label>
-                                                  </div>
-                                                  <div class="form-check">
-                                                      <input type="radio" id="other" name="gender" value="other" <?php if ($row['gender'] == 'other') echo 'checked'; ?> required>
-                                                      <label for="other">Other</label>
+                                          <form action="edit.php" method="post">
+                                              <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                              <div class="form-group">
+                                                  <label for="firstname">First Name</label>
+                                                  <input type="text" class="form-control" name="firstname" value="<?php echo $row['firstname']; ?>" required>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="lastname">Last Name</label>
+                                                  <input type="text" class="form-control" name="lastname" value="<?php echo $row['lastname']; ?>" required>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="email">Email</label>
+                                                  <input type="email" class="form-control" name="email" value="<?php echo $row['email']; ?>" required>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="phone">Phone</label>
+                                                  <input type="tel" class="form-control" name="phone" value="<?php echo $row['phone']; ?>" required>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="address">Address</label>
+                                                  <input type="text" class="form-control" name="address" value="<?php echo $row['address']; ?>" required>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label>Gender</label>
+                                                  <div class="gender-options">
+                                                      <div class="form-check">
+                                                          <input type="radio" id="male" name="gender" value="male" <?php if ($row['gender'] == 'male') echo 'checked'; ?> required>
+                                                          <label for="male">Male</label>
+                                                      </div>
+                                                      <div class="form-check">
+                                                          <input type="radio" id="female" name="gender" value="female" <?php if ($row['gender'] == 'female') echo 'checked'; ?> required>
+                                                          <label for="female">Female</label>
+                                                      </div>
+                                                      <div class="form-check">
+                                                          <input type="radio" id="other" name="gender" value="other" <?php if ($row['gender'] == 'other') echo 'checked'; ?> required>
+                                                          <label for="other">Other</label>
+                                                      </div>
                                                   </div>
                                               </div>
-                                          </div>
-                                          <button type="submit" class="btn btn-primary">Update</button>
-                                      </form>
+                                              <button type="submit" class="btn btn-primary">Update</button>
+                                          </form>
                                       <?php else: ?>
                                           <p>Error: Student data not found.</p>
                                       <?php endif; ?>
