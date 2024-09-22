@@ -1,9 +1,10 @@
 <?php
-include 'config.php';
-$id = ($_GET['id']) ? ($_GET['id']) : 0;
+ include '../auth/config.php'; 
+ $id = ($_GET['id']) ? ($_GET['id']) : 0;
 $sql1 = "SELECT * FROM students s WHERE s.id = ?";
 $stmt1 = $conn->prepare($sql1);
 $stmt1->bind_param("i", $id);
+
 $stmt1->execute();
 $result1 = $stmt1->get_result();
 $row = $result1->fetch_assoc();
@@ -24,8 +25,8 @@ if (!$row) {
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="css/style.css">
-
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 </head>
 
 <body>

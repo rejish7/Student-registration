@@ -1,6 +1,6 @@
 <?php
-include 'auth/config.php';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+ include '../auth/config.php'; 
+ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $email = $_POST['email'];
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_FILES['image'])) {
                 $file_name = $_FILES['image']['name'];
                 $fileTmpName = $_FILES['image']['tmp_name'];
-                $folder = 'picture/' . $file_name;
+                $folder = '../picture/' . $file_name;
 
                 $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
                 $max_size = 5 * 1024 * 1024; // 5MB
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     if ($result2) {
                         if (move_uploaded_file($fileTmpName, $folder)) {
-                            echo "<script>alert('Thank you for registering!'); window.location.href='index.php';</script>";
+                            echo "<script>alert('Thank you for registering!'); window.location.href='crud_display.php';</script>";
                         } else {
                             echo "<script>alert('Failed to upload the file.');</script>";
                         }
@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
     <title>Student Registration</title>
 </head>
 
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container-fluid p-0">
             <div class="row no-gutters vh-100">
                 <div class="col-md-6 p-0">
-                    <img src="images/undraw_remotely_2j6y.svg" alt="Registration Image" class="img-fluid h-100 w-100 object-fit-cover">
+                    <img src="../images/undraw_remotely_2j6y.svg" alt="Registration Image" class="img-fluid h-100 w-100 object-fit-cover">
                 </div>
                 <div class="col-md-6 d-flex align-items-center justify-content-center p-0">
                     <div class="bg-white p-4 rounded w-100 h-100">
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-md-10">
                                 <div class="mb-4">
                                     <h2>Student Registration</h2>
-                                    <form action="index.php" method="post" enctype="multipart/form-data">
+                                    <form action="addstudent.php" method="post" enctype="multipart/form-data">
                                         <div class="form-group">
                                             <label for="firstname">First Name</label>
                                             <input type="text" class="form-control" name="firstname" required>

@@ -1,7 +1,9 @@
 <?php
-    include 'config.php';
-    include 'navbar.php'; 
-?>
+ include '../auth/config.php'; ?>
+ <header>
+ <link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="../css/bootstrap.min.css">
+ </header>
 
     <div class="container">
         <div class="row">

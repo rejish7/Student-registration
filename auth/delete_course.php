@@ -1,6 +1,5 @@
 <?php
-include 'config.php';
-
+ include '../auth/config.php'; 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     

@@ -1,7 +1,6 @@
 <?php
 
-include 'config.php';
-
+include '../auth/config.php'; 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $sql = "DELETE FROM students WHERE id = ?";

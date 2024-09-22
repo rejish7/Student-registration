@@ -1,7 +1,6 @@
 
 <?php
-include 'config.php';
-
+ include '../auth/config.php'; 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $scid = isset($_GET['scid']) ? intval($_GET['scid']) : 0;
 

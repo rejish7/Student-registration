@@ -1,7 +1,6 @@
 
 <?php
-include 'config.php';
-
+ include '../auth/config.php'; 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $scid = isset($_GET['scid']) ? intval($_GET['scid']) : 0;
 
@@ -46,7 +45,8 @@ $row = $result->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 </head>
 <body>
     <section class="ftco-section">

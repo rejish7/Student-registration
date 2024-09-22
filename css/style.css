@@ -1,3 +1,59 @@
+/* Styles for auth/dashboard.php */
+body.dashboard {
+    background-color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
+}
+.dashboard .dashboard-header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+.dashboard .dashboard-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+.dashboard .dashboard-card:hover {
+    transform: translateY(-5px);
+}
+.dashboard .btn-custom {
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.dashboard footer {
+    background-color: #343a40;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Base styles */
 body {
     font-family: 'Arial', sans-serif;
@@ -172,49 +228,79 @@ input[type="radio"]:checked + label:after {
 }
 
 /* Styles for crud_display.php */
-
-.ftco-section {
-    padding: 2em 0;
-}
-
-.heading-section {
-    font-size: 24px;
-    color: #000;
-    margin-bottom: 30px;
-}
-
-.table-wrap {
+.table-responsive {
     overflow-x: auto;
 }
 
-.table {
+#studentsTable {
     width: 100%;
-    min-width: 700px;
-    margin-bottom: 1rem;
-    color: #212529;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-collapse: collapse;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
+#studentsTable th, #studentsTable td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
 }
 
-.table th,
-.table td {
-    padding: 0rem;
-    vertical-align: middle;
-    border-top: 1px solid #dee2e6;
+#studentsTable thead {
+    background-color: #343a40;
+    color: white;
 }
 
-.table thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
-    background-color: #f8f9fa;
-    font-weight: 600;
+#studentsTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#studentsTable tbody tr:hover {
+    background-color: #ddd;
+}
+
+.btn-action {
+    margin: 2px;
+}
+
+.img-thumbnail {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.heading-section {
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #343a40;
+}
+
+@media screen and (max-width: 600px) {
+    #studentsTable thead {
+        display: none;
+    }
+
+    #studentsTable, #studentsTable tbody, #studentsTable tr, #studentsTable td {
+        display: block;
+        width: 100%;
+    }
+
+    #studentsTable tr {
+        margin-bottom: 15px;
+    }
+
+    #studentsTable td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    #studentsTable td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
 }
 
 .btn {

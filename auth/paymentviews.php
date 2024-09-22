@@ -1,6 +1,5 @@
 <?php
-include 'config.php';
-
+ include '../auth/config.php'; 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $scid = isset($_GET['scid']) ? intval($_GET['scid']) : 0;
 
@@ -34,7 +33,8 @@ $student_name = htmlspecialchars($row['firstname'] . ' ' . $row['lastname']);
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
 
 </head>
 
