@@ -1,0 +1,102 @@
+[index.php] (Entry Point)
+    |
+    ├── [config/]
+    |   └── config.php (Database connection)
+    |
+    ├── [controllers/]
+    |   ├── StudentController.php
+    |   ├── CourseController.php
+    |   ├── AuthController.php
+    |   ├── DashboardController.php
+    |   └── PaymentController.php
+    |
+    ├── [models/]
+    |   ├── Student.php
+    |   ├── Course.php
+    |   ├── User.php
+    |   ├── Payment.php
+    |   └── Image.php
+    |
+    ├── [views/]
+    |   ├── [students/]
+    |   |   ├── index.php (List)
+    |   |   ├── create.php
+    |   |   ├── edit.php
+    |   |   └── view.php
+    |   ├── [courses/]
+    |   |   ├── index.php (List)
+    |   |   ├── create.php
+    |   |   ├── edit.php
+    |   |   └── view.php
+    |   ├── [auth/]
+    |   |   ├── login.php
+    |   |   └── register.php
+    |   ├── [payments/]
+    |   |   ├── index.php (List)
+    |   |   ├── create.php
+    |   |   └── view.php
+    |   └── dashboard.php
+    |
+    ├── [public/]
+    |   ├── [css/]
+    |   ├── [js/]
+    |   └── [images/]
+    |
+    ├── [includes/]
+    |   ├── header.php
+    |   └── footer.php
+    |
+    ├── [api/]
+    |   ├── students.php
+    |   ├── courses.php
+    |   ├── users.php
+    |   └── payments.php
+    |
+    └── [backend/]
+        ├── [services/]
+        ├── [utils/]
+        └── [middleware/]
+
+
+
+        CRUD/
+├── config/
+│   └── config.php
+├── controllers/
+│   ├── AuthController.php
+│   ├── CourseController.php
+│   ├── DashboardController.php
+│   ├── PaymentController.php
+│   └── StudentController.php
+├── models/
+│   ├── Course.php
+│   ├── Payment.php
+│   ├── Student.php
+│   └── User.php
+├── views/
+│   ├── auth/
+│   │   ├── login.php
+│   │   └── signup.php
+│   ├── courses/
+│   │   ├── add.php
+│   │   ├── delete.php
+│   │   ├── edit.php
+│   │   ├── index.php
+│   │   └── enrolled_students.php
+│   ├── dashboard/
+│   │   └── index.php
+│   ├── payments/
+│   │   ├── add.php
+│   │   ├── delete.php
+│   │   └── view.php
+│   └── students/
+│       ├── add.php
+│       ├── delete.php
+│       ├── edit.php
+│       ├── index.php
+│       └── view.php
+├── public/
+│   ├── css/
+│   ├── js/
+│   └── images/
+└── index.php

@@ -1,0 +1,9 @@
+# Enable Apache rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    Options +MultiViews
+    Options -Indexes
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php?uri=$1 [L,QSA]
+</IfModule>
