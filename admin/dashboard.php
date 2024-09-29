@@ -21,7 +21,7 @@
     ?>
     <!doctype html>
     <html lang="en">
-    
+
     <head>
         <title>Admin Dashboard - Student Registration Management</title>
         <meta charset="utf-8">
@@ -30,8 +30,49 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="../public/css/bootstrap.min.css">
         <link rel="stylesheet" href="../public/css/style.css">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Roboto', sans-serif;
+            }
+            .dashboard-header {
+                background-color: #007bff;
+                color: white;
+                padding: 20px 0;
+                margin-bottom: 30px;
+                border-radius: 10px;
+            }
+            .dashboard-card {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+            }
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+            .btn-custom {
+                border-radius: 20px;
+                padding: 10px 20px;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: all 0.3s ease;
+            }
+            .btn-custom:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            footer {
+                background-color: #343a40;
+                color: white;
+            }
+        </style>
     </head>
-    
+
     <body>
         <section class="ftco-section">
             <div class="container">
@@ -72,7 +113,7 @@
                                         <a href="../views/students/crud_display.php" class="btn btn-info btn-block btn-custom">View/Edit Students</a>
                                     </div>
                                 </div>
-                                
+                            
                                 <div class="col-md-4">
                                     <div class="dashboard-card">
                                         <h4><i class="fa fa-users"></i> User Management</h4>
@@ -102,6 +143,8 @@
         <footer class="text-center py-3">
             <p>© <?php echo date('Y'); ?> Student Registration Management System by Rejish</p>
         </footer>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
     </html>
-

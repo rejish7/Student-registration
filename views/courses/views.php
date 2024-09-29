@@ -26,6 +26,13 @@ if (!$row) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
+    <style>
+        @media print {
+            @page {
+                size: landscape;
+            }
+        }
+    </style>
 </head>
 
 <body>

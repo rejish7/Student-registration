@@ -1,6 +1,6 @@
 <?php
- include '../auth/config.php'; 
- $id=$_GET['id'];
+include '../../config/config.php';
+$id=$_GET['id'];
 echo $id;
 $scid=$_GET['scid'];
 

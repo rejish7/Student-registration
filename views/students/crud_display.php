@@ -15,6 +15,15 @@
 </head>
 
 <body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-left mb-3">
+                <a href="../../admin/dashboard.php" class="btn btn-primary"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
     <section class="ftco-section">
         <div class="container-fluid">
             <div class="row justify-content-center">
@@ -83,7 +92,7 @@
                                             </td>
                                             <td>
                                                 <a href="../courses/views.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm btn-action"><i class="fa fa-eye"></i></a>
-                                                <a href="addmorecourse.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-warning btn-sm btn-action"><i class="fa fa-plus-circle"></i></a>
+                                                <a href="../courses/addmorecourses.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-warning btn-sm btn-action"><i class="fa fa-plus-circle"></i></a>
                                             </td>
                                             <td>
                                                 <a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm btn-action"><i class="fa fa-edit"></i></a>

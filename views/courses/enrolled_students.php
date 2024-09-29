@@ -1,6 +1,6 @@
 <?php
- include '../auth/config.php'; 
-?>
+ include '../../config/config.php'; 
+ ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,7 @@
         $course_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         if ($course_id) {
-            $sql = "SELECT s.id, s.firstname, s.lastname, s.email 
+            $sql = "SELECT s.id, s.fullname, s.email 
                     FROM students s 
                     INNER JOIN student_course sc ON s.id = sc.student_id 
                     WHERE sc.course_id = ?";
@@ -41,7 +41,7 @@
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
                             <td>" . htmlspecialchars($row['id']) . "</td>
-                            <td>" . htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) . "</td>
+                            <td>" . htmlspecialchars($row['fullname']) . "</td>
                             <td>" . htmlspecialchars($row['email']) . "</td>
                           </tr>";
                 }

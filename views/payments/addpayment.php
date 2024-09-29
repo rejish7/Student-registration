@@ -1,6 +1,6 @@
 <?php
-    include '../../config/config.php';
-    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+include '../../config/config.php';
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $scid = isset($_GET['scid']) ? intval($_GET['scid']) : 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -61,7 +61,6 @@ if ($result->num_rows == 0) {
 $row = $result->fetch_assoc();
 $student_name = htmlspecialchars($row['fullname']);
 
-
 $sql_balance = "SELECT IFNULL(SUM(amount), 0) as total_paid FROM payments WHERE student_course_id = ?";
 $stmt_balance = $conn->prepare($sql_balance);
 $stmt_balance->bind_param("i", $scid);
@@ -71,23 +70,17 @@ $row_balance = $result_balance->fetch_assoc();
 $total_paid = $row_balance['total_paid'];
 $remaining_balance = $row['price'] - $total_paid;
 ?>
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Add Payment</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <title>Add Payment</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
 </head>
-
 <body>
     <section class="ftco-section">
         <div class="container">
@@ -99,7 +92,6 @@ $remaining_balance = $row['price'] - $total_paid;
             <div>
                 <h2>Student: <?= $student_name ?></h2>
             </div>
-            
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-wrap">
@@ -138,7 +130,6 @@ $remaining_balance = $row['price'] - $total_paid;
     </section>
 </body>
 </html>
-
 <?php
 $stmt->close();
 $stmt_balance->close();

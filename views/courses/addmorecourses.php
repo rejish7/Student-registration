@@ -1,61 +1,81 @@
 <?php
- include '../config/config.php'; 
- 
+include '../../config/config.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['title']) && isset($_POST['duration']) && isset($_POST['price'])) {
-        $title = $_POST['title'];
-        $duration = $_POST['duration'];
-        $price = $_POST['price'];
-        $sql = "INSERT INTO it_course (title, duration, price) VALUES (?, ?, ?)";
+    $student_id = $_POST['student_id'];
+    $course_id = $_POST['course_id'];
+
+    $check_sql = "SELECT * FROM student_course WHERE student_id = ? AND course_id = ?";
+    $check_stmt = $conn->prepare($check_sql);
+    $check_stmt->bind_param("ii", $student_id, $course_id);
+    $check_stmt->execute();
+    $check_result = $check_stmt->get_result();
+
+    if ($check_result->num_rows == 0) {
+        $sql = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssd", $title, $duration, $price);
+        $stmt->bind_param("ii", $student_id, $course_id);
+
         if ($stmt->execute()) {
-            echo "<script>alert('Course added successfully!'); window.location.href='courses.php';</script>";
+            $_SESSION['success'] = "Course added successfully.";
         } else {
-            echo "<script>alert('Error adding course: " . $stmt->error . "');</script>";
+            $_SESSION['error'] = "Error adding course: " . $conn->error;
         }
         $stmt->close();
+    } else {
+        $_SESSION['error'] = "Student is already enrolled in this course.";
     }
+    $check_stmt->close();
+
+    header("Location: ../students/crud_display.php");
+    exit();
 }
 
+$student_id = $_GET['student_id'] ?? '';
+
+if (!$student_id) {
+    $_SESSION['error'] = "No student ID provided.";
+    header("Location: ../students/crud_display.php");
+    exit();
+}
+
+$courses_sql = "SELECT * FROM it_course WHERE id NOT IN (SELECT course_id FROM student_course WHERE student_id = ?)";
+$courses_stmt = $conn->prepare($courses_sql);
+$courses_stmt->bind_param("i", $student_id);
+$courses_stmt->execute();
+$courses_result = $courses_stmt->get_result();
 ?>
 
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Add Course</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add More Courses</title>
     <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
 </head>
-
-
-
 <body>
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">Add New Course</h2>
-                </div>
+    <div class="container mt-5">
+        <h2 class="text-center">Add More Courses</h2>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="mt-4">
+            <input type="hidden" name="student_id" value="<?php echo $student_id; ?>">
+            <div class="form-group">
+                <label for="course_id">Select Course:</label>
+                <select name="course_id" id="course_id" class="form-control" required>
+                    <option value="">Select a course</option>
+                    <?php while ($course = $courses_result->fetch_assoc()): ?>
+                        <option value="<?php echo $course['id']; ?>"><?php echo htmlspecialchars($course['title']); ?></option>
+                    <?php endwhile; ?>
+                </select>
             </div>
-            <div>
-                <form method="post" action="">
-                    <label for="title">Course Title:</label><br>
-                    <input type="text" id="title" name="title" required><br><br>
-                    <label for="duration">Duration:</label><br>
-                    <input type="text" id="duration" name="duration" required><br><br>
-                    <label for="price">Price:</label><br>
-                    <input type="number" id="price" name="price" step="0.01" required><br><br>
-                    <input type="submit" value="Add Course" class="btn btn-warning">
-                </form>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Add Course</button>
             </div>
-        </div>
-    </section>
-</body>
+        </form>
+    </div>
 
+    <script src="../../public/js/jquery-3.3.1.min.js"></script>
+    <script src="../../public/js/bootstrap.min.js"></script>
+</body>
 </html>

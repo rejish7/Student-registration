@@ -1,6 +1,3 @@
-<style>
-.error {color: #FF0000;}
-</style>
 <?php
 include '../../config/config.php';
 
@@ -12,62 +9,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
     $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
-    $wanted_course = isset($_POST['wanted_course']) ? $_POST['wanted_course'] : '';
+    $wanted_courses = isset($_POST['wanted_courses']) ? $_POST['wanted_courses'] : [];
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    if (empty($fullname)) {
-        $errors['fullname'] = "Full name is required";
-    } elseif (!preg_match("/^[a-zA-Z ]*$/", $fullname)) {
-        $errors['fullname'] = "<span class='text-danger'>Only letters and white space allowed</span>";
+    // Validation
+    if (empty($fullname) || strlen($fullname) < 2 || strlen($fullname) > 100) {
+        $errors['fullname'] = "Full name is required and must be between 2 and 100 characters";
     }
-
     if (empty($email)) {
         $errors['email'] = "Email is required";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Invalid email format";
     }
-
-    if (empty($phone)) {
-        $errors['phone'] = "Phone number is required";
-    } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
-        $errors['phone'] = "Invalid phone number format";
+    if (empty($phone) || !preg_match("/^[0-9]{10}$/", $phone)) {
+        $errors['phone'] = "Phone number is required and must be 10 digits";
+    }
+    if (empty($address) || strlen($address) < 5 || strlen($address) > 200) {
+        $errors['address'] = "Address is required and must be between 5 and 200 characters";
+    }
+    if (empty($gender) || !in_array($gender, ['male', 'female', 'other'])) {
+        $errors['gender'] = "Valid gender selection is required";
+    }
+    if (empty($wanted_courses) || !is_array($wanted_courses) || count($wanted_courses) < 1) {
+        $errors['wanted_courses'] = "Please select at least one course";
+    }
+    if (empty($username) || strlen($username) < 4 || strlen($username) > 20 || !preg_match("/^[a-zA-Z0-9_]+$/", $username)) {
+        $errors['username'] = "Username is required and must be 4-20 characters long, containing only letters, numbers, and underscores";
+    }
+    if (empty($password) || strlen($password) < 8 || !preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $password)) {
+        $errors['password'] = "Password is required and must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character";
     }
 
-    if (empty($address)) {
-        $errors['address'] = "Address is required";
-    }
-
-    if (empty($gender)) {
-        $errors['gender'] = "Gender is required";
-    }
-
-    if (empty($wanted_course)) {
-        $errors['wanted_course'] = "Please select a course";
-    }
-
-    if (empty($username)) {
-        $errors['username'] = "Username is required";
-    } elseif (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
-        $errors['username'] = "Only letters and numbers allowed";
-    }
-
-    if (empty($password)) {
-        $errors['password'] = "Password is required";
-    } elseif (strlen($password) < 8) {
-        $errors['password'] = "Password must be at least 8 characters long";
-    }
-
+    // File upload validation
     if (!isset($_FILES['image']) || $_FILES['image']['error'] == UPLOAD_ERR_NO_FILE) {
         $errors['image'] = "Profile picture is required";
     } else {
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-        $max_size = 5 * 1024 * 1024; 
+        $file_type = $_FILES['image']['type'];
+        $file_size = $_FILES['image']['size'];
+        
+        if (!in_array($file_type, $allowed_types)) {
+            $errors['image'] = "Invalid file type. Only JPG, PNG, and GIF are allowed.";
+        }
+        if ($file_size > 5000000 || $file_size < 1000) {
+            $errors['image'] = "File size must be between 1KB and 5MB.";
+        }
+    }
 
-        if (!in_array($_FILES['image']['type'], $allowed_types)) {
-            $errors['image'] = "Invalid file type. Please upload a JPG, PNG, or GIF file";
-        } elseif ($_FILES['image']['size'] > $max_size) {
-            $errors['image'] = "File size exceeds 5MB limit";
+    if (empty($errors)) {
+        // username already exists
+        $check_username = "SELECT id FROM users WHERE username = ?";
+        if ($stmt_check = $conn->prepare($check_username)) {
+            $stmt_check->bind_param("s", $username);
+            $stmt_check->execute();
+            $stmt_check->store_result();
+            if ($stmt_check->num_rows > 0) {
+                $errors['username'] = "Username already exists. Please choose a different one.";
+            }
+            $stmt_check->close();
         }
     }
 
@@ -90,10 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $last_id = $conn->insert_id;
                         $sql1 = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
                         if ($stmt1 = $conn->prepare($sql1)) {
-                            $stmt1->bind_param("ii", $last_id, $wanted_course);
-                            $result1 = $stmt1->execute();
+                            foreach ($wanted_courses as $course_id) {
+                                $stmt1->bind_param("ii", $last_id, $course_id);
+                                $result1 = $stmt1->execute();
+                                if (!$result1) {
+                                    $errors['course_insert'] = "Error inserting course: " . $conn->error;
+                                    break;
+                                }
+                            }
 
-                            if ($result1) {
+                            if (!isset($errors['course_insert'])) {
                                 $file_name = $_FILES['image']['name'];
                                 $fileTmpName = $_FILES['image']['tmp_name'];
                                 $folder = '../../public/images/' . basename($file_name);
@@ -106,38 +112,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     if ($result2) {
                                         if (move_uploaded_file($fileTmpName, $folder)) {
                                             echo "<script>alert('Thank you for registering!'); window.location.href='../../admin/dashboard.php';</script>";
+                                            exit();
                                         } else {
-                                            echo "<script>alert('Failed to upload the file.');</script>";
+                                            $errors['file_upload'] = "Failed to upload the file.";
                                         }
                                     } else {
-                                        echo "<script>alert('Failed to insert file name into the database.');</script>";
+                                        $errors['image_insert'] = "Failed to insert file name into the database.";
                                     }
                                 } else {
-                                    echo "<script>alert('Error preparing image insert statement: " . $conn->error . "');</script>";
+                                    $errors['image_statement'] = "Error preparing image insert statement: " . $conn->error;
                                 }
-                            } else {
-                                echo "<script>alert('Error inserting course: " . $conn->error . "');</script>";
                             }
                         } else {
-                            echo "<script>alert('Error preparing course insert statement: " . $conn->error . "');</script>";
+                            $errors['course_statement'] = "Error preparing course insert statement: " . $conn->error;
                         }
                     } else {
-                        echo "<script>alert('Error inserting student: " . $conn->error . "');</script>";
+                        $errors['student_insert'] = "Error inserting student: " . $conn->error;
                     }
                 } else {
-                    echo "<script>alert('Error preparing student insert statement: " . $conn->error . "');</script>";
+                    $errors['student_statement'] = "Error preparing student insert statement: " . $conn->error;
                 }
             } else {
-                echo "<script>alert('Error inserting user: " . $conn->error . "');</script>";
+                $errors['user_insert'] = "Error inserting user: " . $conn->error;
             }
 
             $stmt_user->close();
         } else {
-            echo "<script>alert('Error preparing user insert statement: " . $conn->error . "');</script>";
+            $errors['user_statement'] = "Error preparing user insert statement: " . $conn->error;
         }
 
         mysqli_close($conn);
     }
+}
+
+// Display errors at the top of the form
+if (!empty($errors)) {
+    echo "<div class='alert alert-danger'>";
+    foreach ($errors as $error) {
+        echo "<p>" . htmlspecialchars($error) . "</p>";
+    }
+    echo "</div>";
 }
 ?>
 <!doctype html>
@@ -150,102 +164,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
     <title>Student Registration</title>
+    <style>
+    .error {color: #FF0000;}
+    </style>
 </head>
 
 <body>
     <div class="content">
-        <div class="container-fluid p-0">
-            <div class="row no-gutters vh-100">
-                <div class="col-md-6 p-0">
-                    <img src="../../public/images/undraw_remotely_2j6y.svg" alt="Registration Image" class="img-fluid h-100 w-100 object-fit-cover">
-                </div>
-                <div class="col-md-6 d-flex align-items-center justify-content-center p-0">
-                    <div class="bg-white p-4 rounded w-100 h-100">
-                        <div class="row justify-content-center h-100">
-                            <div class="col-md-10">
-                                <div class="mb-4">
-                                    <h2>Student Registration</h2>
-                                    <form action="addstudent.php" method="post" enctype="multipart/form-data">
-                                        <div class="form-group">
-                                            <label for="username">Username</label>
-                                            <input type="text" class="form-control" name="username" value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
-                                            <span class="error"><?= isset($errors['username']) ? $errors['username'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="fullname">Full Name</label>
-                                            <input type="text" class="form-control" name="fullname" value="<?= isset($_POST['fullname']) ? htmlspecialchars($_POST['fullname']) : ''; ?>" required>
-                                            <span class="error"><?= isset($errors['fullname']) ? $errors['fullname'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control" name="email" value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
-                                            <span class="error"><?= isset($errors['email']) ? $errors['email'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password</label>
-                                            <input type="password" class="form-control" name="password" required>
-                                            <span class="error"><?= isset($errors['password']) ? $errors['password'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="phone">Phone</label>
-                                            <input type="tel" class="form-control" name="phone" value="<?= isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>" required>
-                                            <span class="error"><?= isset($errors['phone']) ? $errors['phone'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="address">Address</label>
-                                            <input type="text" class="form-control" name="address" value="<?= isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?>" required>
-                                            <span class="error"><?= isset($errors['address']) ? $errors['address'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Gender</label>
-                                            <div class="gender-options">
-                                                <div class="form-check">
-                                                    <input type="radio" name="gender" value="male" id="male" <?= (isset($_POST['gender']) && $_POST['gender'] == 'male') ? 'checked' : ''; ?> required>
-                                                    <label for="male">Male</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="female" name="gender" value="female" <?= (isset($_POST['gender']) && $_POST['gender'] == 'female') ? 'checked' : ''; ?>>
-                                                    <label for="female">Female</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="other" name="gender" value="other" <?= (isset($_POST['gender']) && $_POST['gender'] == 'other') ? 'checked' : ''; ?>>
-                                                    <label for="other">Other</label>
-                                                </div>
-                                            </div>
-                                            <span class="error"><?= isset($errors['gender']) ? $errors['gender'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Wanted Course</label>
-                                            <?php
-                                            $sql = "SELECT * FROM it_course";
-                                            $result = $conn->query($sql);
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo "<div class='form-check'>";
-                                                    echo "<input type='radio' id='course_" . htmlspecialchars($row["id"]) . "' name='wanted_course' value='" . htmlspecialchars($row["id"]) . "' " . ((isset($_POST['wanted_course']) && $_POST['wanted_course'] == $row["id"]) ? 'checked' : '') . " required>";
-                                                    echo "<label for='course_" . htmlspecialchars($row["id"]) . "'>" . htmlspecialchars($row["title"]) . "</label>";
-                                                    echo "</div>";
-                                                }
-                                            }
-                                            ?>
-                                            <span class="error"><?= isset($errors['wanted_course']) ? $errors['wanted_course'] : ''; ?></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profile_picture">Profile Picture</label>
-                                            <br>
-                                            <input type="file" name="image" id="image" accept="image/*" required>
-                                            <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-                                            <small class="form-text text-muted">Max file size: 5MB. Allowed formats: JPG, JPEG, PNG, GIF</small>
-                                            <span class="error"><?= isset($errors['image']) ? $errors['image'] : ''; ?></span>
-                                        </div>
-
-                                        <br>
-                                        <button type="submit" class="btn btn-primary">Register</button>
-                                    </form>
-                                </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="form-container">
+                        <h2>Student Registration</h2>
+                        <form action="addstudent.php" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="username"><i class="fas fa-user"></i> Username</label>
+                                <input type="text" class="form-control" name="username" value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
+                                <span class="error"><?= isset($errors['username']) ? $errors['username'] : ''; ?></span>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="fullname"><i class="fas fa-id-card"></i> Full Name</label>
+                                <input type="text" class="form-control" name="fullname" value="<?= isset($_POST['fullname']) ? htmlspecialchars($_POST['fullname']) : ''; ?>" required>
+                                <span class="error"><?= isset($errors['fullname']) ? $errors['fullname'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" class="form-control" name="email" value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
+                                <span class="error"><?= isset($errors['email']) ? $errors['email'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="password"><i class="fas fa-lock"></i> Password</label>
+                                <input type="password" class="form-control" name="password" required>
+                                <span class="error"><?= isset($errors['password']) ? $errors['password'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone"><i class="fas fa-phone"></i> Phone</label>
+                                <input type="tel" class="form-control" name="phone" value="<?= isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>" required>
+                                <span class="error"><?= isset($errors['phone']) ? $errors['phone'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="address"><i class="fas fa-home"></i> Address</label>
+                                <input type="text" class="form-control" name="address" value="<?= isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?>" required>
+                                <span class="error"><?= isset($errors['address']) ? $errors['address'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-venus-mars"></i> Gender</label>
+                                <div class="gender-options">
+                                    <div class="form-check">
+                                        <input type="radio" name="gender" value="male" id="male" <?= (isset($_POST['gender']) && $_POST['gender'] == 'male') ? 'checked' : ''; ?> required>
+                                        <label for="male">Male</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="female" name="gender" value="female" <?= (isset($_POST['gender']) && $_POST['gender'] == 'female') ? 'checked' : ''; ?>>
+                                        <label for="female">Female</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" id="other" name="gender" value="other" <?= (isset($_POST['gender']) && $_POST['gender'] == 'other') ? 'checked' : ''; ?>>
+                                        <label for="other">Other</label>
+                                    </div>
+                                </div>
+                                <span class="error"><?= isset($errors['gender']) ? $errors['gender'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-graduation-cap"></i> Wanted Courses</label>
+                                <div class="course-options">
+                                    <?php
+                                    $sql = "SELECT * FROM it_course";
+                                    $result = $conn->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<div class='form-check custom-checkbox'>";
+                                            echo "<input type='checkbox' class='custom-control-input' id='course_" . htmlspecialchars($row["id"]) . "' name='wanted_courses[]' value='" . htmlspecialchars($row["id"]) . "' " . ((isset($_POST['wanted_courses']) && in_array($row["id"], $_POST['wanted_courses'])) ? 'checked' : '') . ">";
+                                            echo "<label class='custom-control-label' for='course_" . htmlspecialchars($row["id"]) . "'>" . htmlspecialchars($row["title"]) . "</label>";
+                                            echo "</div>";
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                                <span class="error"><?= isset($errors['wanted_courses']) ? $errors['wanted_courses'] : ''; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile_picture"><i class="fas fa-image"></i> Profile Picture</label>
+                                <br>
+                                <input type="file" name="image" id="image" accept="image/*" required>
+                                <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+                                <small class="form-text text-muted">Max file size: 5MB. Allowed formats: JPG, JPEG, PNG, GIF</small>
+                                <span class="error"><?= isset($errors['image']) ? $errors['image'] : ''; ?></span>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-user-plus"></i> Register</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -255,3 +266,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="../../public/js/jquery-3.3.1.min.js"></script>
     <script src="../../public/js/popper.min.js"></script>
     <script src="../../public/js/bootstrap.min.js"></script>
+</body>
+</html>
