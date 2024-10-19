@@ -1,6 +1,6 @@
 <?php
-    include '../../config/config.php';
-    ?>
+include '../../config/config.php';
+?>
 <!doctype html>
 <html lang="en">
 
@@ -14,18 +14,9 @@
     <link rel="stylesheet" href="../../public/css/style.css">
 </head>
 
-<body>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-left mb-3">
-                <a href="../../admin/dashboard.php" class="btn btn-primary"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
-            </div>
-        </div>
-    </div>
-
-    <section class="ftco-section">
-        <div class="container-fluid">
+<body class="d-flex flex-column min-vh-100">
+    <section class="ftco-section flex-grow-1">
+        <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-4">
                     <h2 class="heading-section">Student Details</h2>
@@ -33,9 +24,9 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table id="studentsTable" class="table table-striped table-bordered table-hover">
-                            <thead class="thead-dark">
+                    <div class="table-wrap">
+                        <table id="studentsTable" class="table table-striped">
+                            <thead>
                                 <tr>
                                     <th>S.N</th>
                                     <th>Username</th>
@@ -59,8 +50,8 @@
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
+                                    $i = 1;
                                     while ($row = $result->fetch_assoc()) {
-                                        $i = 1;
                                 ?>
                                         <tr>
                                             <td><?php echo $i++; ?></td>
@@ -113,8 +104,10 @@
         </div>
     </section>
 
+    <div class="text-center">
+        <a href="../../admin/dashboard.php" class="btn btn-primary"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
 </body>
 
 </html>

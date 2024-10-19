@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $check_stmt->close();
 
-    header("Location: views.php?id=" . urlencode($student_id));
+    header("Location: ../students/student_dashboard.php");
     exit();
 }
 
@@ -35,7 +35,7 @@ $student_id = $_GET['student_id'] ?? '';
 
 if (!$student_id) {
     $_SESSION['error'] = "No student ID provided.";
-    header("Location: views.php?id=" . urlencode($student_id));
+    header("Location: ../students/student_dashboard.php");
     exit();
 }
 

@@ -68,7 +68,7 @@ $row1 = $result1->fetch_assoc();
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="logout_user.php">Logout</a>
+                    <a class="nav-link" href="../../views/auth/logout.php">Logout</a>
                 </li>
             </ul>
         </div>
@@ -85,7 +85,7 @@ $row1 = $result1->fetch_assoc();
                     <?php endif; ?>
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($student['fullname']); ?></h5>
-                        <a href="views_profile.php" class="btn btn-primary btn-block">View Profile</a>
+                        <a href="views_profile.php?id=<?= $student_id; ?>" class="btn btn-primary btn-block">View Profile</a>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@ $row1 = $result1->fetch_assoc();
                         <h5 class="card-title">Quick Actions</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="registration.php" class="btn btn-info btn-block mb-2">Register for New Course</a>
+                                <a href="../courses/user_courseadd.php?student_id=<?= urlencode($student_id) ?>" class="btn btn-warning btn-sm btn-action"><i class="fa fa-plus-circle"></i> Add More Courses</a>
                             </div>
                             <div class="col-md-6">
                                 <a href="#" class="btn btn-secondary btn-block mb-2">View Grades</a>
@@ -111,19 +111,27 @@ $row1 = $result1->fetch_assoc();
                             <?php while ($course = $enrolled_courses->fetch_assoc()): ?>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <?= htmlspecialchars($course['title']); ?>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View detail</a>
                                 </li>
                             <?php endwhile; ?>
                         </ul>
+                        
+                                                <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Payment Information</h5>
+                                                        <p class="card-text">Amount to be paid: $<?= number_format($amount_to_be_paid, 2); ?></p>
+                                                        <p class="card-text">Amount paid: $<?= number_format($amount_paid, 2); ?></p>
+                                                    </div>
+                                                </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="../../public/js/jquery-3.3.1.min.js"></script>
+    <script src="../../public/js/popper.min.js"></script>
+    <script src="../../public/js/bootstrap.min.js"></script>
 </body>
 
 </html>

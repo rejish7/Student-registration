@@ -80,17 +80,18 @@ $remaining_balance = $row['price'] - $total_paid;
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
+    
 </head>
 <body>
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
+                <div class="col-md-8 text-center mb-5">
                     <h2 class="heading-section">Add New Payment</h2>
                 </div>
             </div>
-            <div>
-                <h2>Student: <?= $student_name ?></h2>
+            <div class="student-info">
+                <h3 class="text-primary">Student: <?= $student_name ?></h3>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -98,26 +99,31 @@ $remaining_balance = $row['price'] - $total_paid;
                         <form action="../../views/payments/addpayment.php?id=<?= $id ?>&scid=<?= $scid ?>" method="post">
                             <input type="hidden" name="student_course_id" value="<?= intval($row['id']) ?>">
                             <div class="form-group">
-                                <label>Course name: <?= htmlspecialchars($row['title']) ?></label>
+                                <label>Course name: <span class="text-info"><?= htmlspecialchars($row['title']) ?></span></label>
                             </div>
                             <div class="form-group">
-                                <label>Duration: <?= htmlspecialchars($row['duration']) ?></label>
+                                <label>Duration: <span class="text-info"><?= htmlspecialchars($row['duration']) ?></span></label>
                             </div>
                             <div class="form-group">
-                                <label>Price: <?= htmlspecialchars($row['price']) ?></label>
+                                <label>Price: <span class="text-success">Rs<?= number_format($row['price'], 2) ?></span></label>
                             </div>
                             <div class="form-group">
-                                <label>Remaining To Pay Balance: <?= number_format($remaining_balance, 2) ?></label>
+                                <label>Remaining To Pay Balance: <span class="text-danger">Rs<?= number_format($remaining_balance, 2) ?></span></label>
                             </div>
                             <div class="form-group">
                                 <label for="paid_amount">Amount:</label>
-                                <input type="number" id="paid_amount" name="paid_amount" step="0.01" min="0" max="<?= $remaining_balance ?>" required class="form-control">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rs</span>
+                                    </div>
+                                    <input type="number" id="paid_amount" name="paid_amount" step="0.01" min="0" max="<?= $remaining_balance ?>" required class="form-control">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="payment_date">Payment Date:</label>
                                 <input type="date" id="payment_date" name="payment_date" required class="form-control">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group text-center">
                                 <button type="submit" class="btn-submit" <?= $remaining_balance <= 0 ? 'disabled' : '' ?>>
                                     <i class="fa fa-plus-circle"></i> Add Payment
                                 </button>
@@ -128,6 +134,9 @@ $remaining_balance = $row['price'] - $total_paid;
             </div>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 <?php

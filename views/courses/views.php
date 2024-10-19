@@ -26,13 +26,6 @@ if (!$row) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../public/css/style.css">
-    <style>
-        @media print {
-            @page {
-                size: landscape;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -52,10 +45,10 @@ if (!$row) {
                             <thead>
                                 <tr>
                                     <th scope="col">S.N</th>
-                                    <th scope="col">Course name</th>
-                                    <th scope="col">Duration</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col"><i class="fa fa-book"></i> Course name</th>
+                                    <th scope="col"><i class="fa fa-clock-o"></i> Duration</th>
+                                    <th scope="col"><i class="fa fa-tag"></i> Price</th>
+                                    <th scope="col"><i class="fa fa-cogs"></i> Action</th>
                                     <th scope="col">Payment Info</th>
                                 </tr>
                             </thead>

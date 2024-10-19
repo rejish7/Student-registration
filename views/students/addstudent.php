@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    // Validation
     if (empty($fullname) || strlen($fullname) < 2 || strlen($fullname) > 100) {
         $errors['fullname'] = "Full name is required and must be between 2 and 100 characters";
     }
@@ -41,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['password'] = "Password is required and must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character";
     }
 
-    // File upload validation
     if (!isset($_FILES['image']) || $_FILES['image']['error'] == UPLOAD_ERR_NO_FILE) {
         $errors['image'] = "Profile picture is required";
     } else {
@@ -58,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($errors)) {
-        // username already exists
         $check_username = "SELECT id FROM users WHERE username = ?";
         if ($stmt_check = $conn->prepare($check_username)) {
             $stmt_check->bind_param("s", $username);
@@ -102,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             if (!isset($errors['course_insert'])) {
                                 $file_name = $_FILES['image']['name'];
                                 $fileTmpName = $_FILES['image']['tmp_name'];
-                                $folder = '../../public/images/' . basename($file_name);
+                                $folder = '../../public/picture/' . basename($file_name);
 
                                 $sql2 = "INSERT INTO images (Student_id, images) VALUES (?, ?)";
                                 if ($stmt2 = $conn->prepare($sql2)) {
@@ -145,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Display errors at the top of the form
 if (!empty($errors)) {
     echo "<div class='alert alert-danger'>";
     foreach ($errors as $error) {
