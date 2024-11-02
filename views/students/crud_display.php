@@ -37,6 +37,7 @@ include '../../config/config.php';
                                     <th>Gender</th>
                                     <th>Profile Picture</th>
                                     <th>Enrolled Course</th>
+                                    <th>Requests</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -71,9 +72,16 @@ include '../../config/config.php';
 
                                                 if ($result1->num_rows > 0) {
                                                     $row1 = $result1->fetch_assoc();
+                                                    $imagePath = "../../public/picture/" . htmlspecialchars($row1['images']);
+                                                    if (file_exists($imagePath)) {
                                                 ?>
-                                                    <img src="../../public/picture/<?= htmlspecialchars($row1['images']) ?>" alt="Profile Picture" width="50" height="50" class="img-thumbnail">
+                                                        <img src="<?= $imagePath ?>" alt="Profile Picture" width="50" height="50" class="img-thumbnail">
                                                 <?php
+                                                    } else {
+                                                ?>
+                                                        <img src="../../public/picture/default.jpg" alt="Default Profile Picture" width="50" height="50" class="img-thumbnail">
+                                                <?php
+                                                    }
                                                 } else {
                                                 ?>
                                                     <img src="../../public/picture/default.jpg" alt="Default Profile Picture" width="50" height="50" class="img-thumbnail">
@@ -84,6 +92,9 @@ include '../../config/config.php';
                                             <td>
                                                 <a href="../courses/views.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm btn-action"><i class="fa fa-eye"></i></a>
                                                 <a href="../courses/addmorecourses.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-warning btn-sm btn-action"><i class="fa fa-plus-circle"></i></a>
+                                            </td>
+                                            <td>
+                                            <a href="../requests/requestview.php?student_id=<?= urlencode($row['id']) ?>" class="btn btn-success btn-sm btn-action"><i class="fa fa-bell"></i></a>
                                             </td>
                                             <td>
                                                 <a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm btn-action"><i class="fa fa-edit"></i></a>

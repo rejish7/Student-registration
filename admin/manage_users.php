@@ -21,6 +21,10 @@ include '../config/config.php';
                 <div class="text-right mb-3">
                     <a href="add_user.php" class="btn btn-success"><i class="fa fa-plus"></i> Add New User</a>
                 </div>
+                <div class="text-left mb-3">
+                                    <a href="dashboard.php" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+                                </div>
+                
         
         <?php
         $sql = "SELECT * FROM users ORDER BY CASE WHEN role = 'admin' THEN 0 ELSE 1 END, username";

@@ -1,5 +1,5 @@
 <?php
-include '../auth/config.php';
+include '../config/config.php';
 
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];

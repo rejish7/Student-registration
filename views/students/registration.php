@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['password'] = "Password is required and must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number and one special character";
     }
 
-    // File upload validation
     if (!isset($_FILES['image']) || $_FILES['image']['error'] == UPLOAD_ERR_NO_FILE) {
         $errors['image'] = "Profile picture is required";
     } else {
@@ -58,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($errors)) {
-        // username already exists
         $check_username = "SELECT id FROM users WHERE username = ?";
         if ($stmt_check = $conn->prepare($check_username)) {
             $stmt_check->bind_param("s", $username);
@@ -102,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             if (!isset($errors['course_insert'])) {
                                 $file_name = $_FILES['image']['name'];
                                 $fileTmpName = $_FILES['image']['tmp_name'];
-                                $folder = '../../public/images/' . basename($file_name);
+                                $folder = '../../public/picture/' . basename($file_name);
 
                                 $sql2 = "INSERT INTO images (Student_id, images) VALUES (?, ?)";
                                 if ($stmt2 = $conn->prepare($sql2)) {
@@ -111,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                     if ($result2) {
                                         if (move_uploaded_file($fileTmpName, $folder)) {
-                                            echo "<script>alert('Thank you for registering!'); window.location.href='../students/student_dashboard.php';</script>";
+                                            echo "<script>alert('Thank you for registering!'); window.location.href='../auth/index.php';</script>";
                                             exit();
                                         } else {
                                             $errors['file_upload'] = "Failed to upload the file.";
@@ -194,8 +192,30 @@ if (!empty($errors)) {
                             </div>
                             <div class="form-group">
                                 <label for="password"><i class="fas fa-lock"></i> Password</label>
-                                <input type="password" class="form-control" name="password" required>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="password" id="password" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" onclick="togglePassword()">
+                                            <i class="fas fa-eye" id="togglePassword"></i>
+                                        </span>
+                                    </div>
+                                </div>
                                 <span class="error"><?= isset($errors['password']) ? $errors['password'] : ''; ?></span>
+                                <script>
+                                    function togglePassword() {
+                                        const passwordInput = document.getElementById('password');
+                                        const toggleIcon = document.getElementById('togglePassword');
+                                        if (passwordInput.type === 'password') {
+                                            passwordInput.type = 'text';
+                                            toggleIcon.classList.remove('fa-eye');
+                                            toggleIcon.classList.add('fa-eye-slash');
+                                        } else {
+                                            passwordInput.type = 'password';
+                                            toggleIcon.classList.remove('fa-eye-slash');
+                                            toggleIcon.classList.add('fa-eye');
+                                        }
+                                    }
+                                </script>
                             </div>
                             <div class="form-group">
                                 <label for="phone"><i class="fas fa-phone"></i> Phone</label>

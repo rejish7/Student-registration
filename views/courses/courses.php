@@ -10,6 +10,7 @@ include '../../config/config.php';
         <div class="row">
             <div class="col-md-12">
                 <h2 class="mb-4">Course Management</h2>
+                <a href="../../admin/dashboard.php" class="btn btn-secondary mb-3">Back to Dashboard</a>
                 <a href="add_course.php" class="btn btn-primary mb-3">Add New Course</a>
                 <?php
                 $sql = "SELECT * FROM it_course";

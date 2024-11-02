@@ -19,6 +19,8 @@ if ($result->num_rows == 0) {
 
 $row = $result->fetch_assoc();
 $student_name = htmlspecialchars($row['fullname']);
+$course_price = $row['price']; 
+$student_id = $row['student_id']; // Added this line to get student_id
 ?>
 
 <!doctype html>
@@ -67,7 +69,7 @@ $student_name = htmlspecialchars($row['fullname']);
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT p.id, p.amount, p.payment_date, c.title, c.duration, c.price 
+                                $sql = "SELECT p.id, p.amount, p.payment_date, c.title, c.duration 
                                         FROM payments p
                                         JOIN student_course sc ON p.student_course_id = sc.id
                                         JOIN it_course c ON sc.course_id = c.id
@@ -79,21 +81,19 @@ $student_name = htmlspecialchars($row['fullname']);
                                 $result = $stmt->get_result();
                                 
                                 $total_paid = 0;
-                                $course_price = 0;
                                 
                                 if ($result->num_rows > 0) {
                                     while ($payment = $result->fetch_assoc()) {
-                                        $course_price = $payment['price'];
                                         $total_paid += $payment['amount'];
                                         $remaining_amount = $course_price - $total_paid;
                                 ?>
                                     <tr>
-                                        <td scope="col"><?= htmlspecialchars($payment['title']) ?></td>
-                                        <td scope="col"><?= htmlspecialchars($payment['duration']) ?></td>
-                                        <td scope="col">Rs<?= htmlspecialchars($payment['price']) ?></td>
-                                        <td scope="col">Rs<?= htmlspecialchars($payment['amount']) ?></td>
-                                        <td scope="col">Rs<?= htmlspecialchars($remaining_amount) ?></td>
-                                        <td scope="col"><?= htmlspecialchars(date('F j, Y', strtotime($payment['payment_date']))) ?></td>
+                                        <td><?= htmlspecialchars($payment['title']) ?></td>
+                                        <td><?= htmlspecialchars($payment['duration']) ?></td>
+                                        <td>Rs<?= htmlspecialchars($course_price) ?></td>
+                                        <td>Rs<?= htmlspecialchars($payment['amount']) ?></td>
+                                        <td>Rs<?= htmlspecialchars($remaining_amount) ?></td>
+                                        <td><?= htmlspecialchars(date('F j, Y', strtotime($payment['payment_date']))) ?></td>
                                         <td>
                                             <a href="../../views/payments/paymentedit.php?id=<?= urlencode($payment['id']) ?>&scid=<?= urlencode($scid) ?>" class="btn btn-primary btn-sm">
                                                 <i class="fa fa-edit"></i> Edit
@@ -103,7 +103,7 @@ $student_name = htmlspecialchars($row['fullname']);
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="../../views/payments/addpayment.php?id=<?= urlencode($id) ?>&scid=<?= urlencode($scid) ?>" class="btn btn-success btn-sm">
+                                            <a href="../../views/payments/addpayment.php?id=<?= urlencode($payment['id']) ?>&scid=<?= urlencode($scid) ?>" class="btn btn-success btn-sm">
                                                 <i class="fa fa-plus"></i> Add New Payment
                                             </a>
                                         </td>
@@ -121,7 +121,7 @@ $student_name = htmlspecialchars($row['fullname']);
                             </tbody>
                         </table>
                         <div class="text-center mt-4">
-                            <a href="../../views/courses/views.php?id=<?= urlencode($id) ?>" class="btn btn-info">
+                            <a href="../../views/courses/views.php?id=<?= urlencode($student_id) ?>" class="btn btn-info">
                                 <i class="fa fa-arrow-left"></i> Back to Student Details
                             </a>
                         </div>

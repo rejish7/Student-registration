@@ -252,6 +252,11 @@ if (!empty($errors)) {
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-user-plus"></i> Register</button>
                             </div>
+                            
+                                                        <div class="text-center mt-3">
+                                                            <a href="../../admin/dashboard.php" class="btn btn-secondary btn-lg"><i class="fas fa-arrow-left"></i> Cancel</a>
+                                                        </div>
+                            
                         </form>
                     </div>
                 </div>

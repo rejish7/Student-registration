@@ -7,7 +7,7 @@ if (isset($_GET['user_id'])) {
 } elseif (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
-    header("Location: login.php");
+    header("Location: ../auth/index.php");
     exit();
 }
 
@@ -26,7 +26,12 @@ if (!$student) {
 
 $student_id = $student['id'];
 
-$stmt = $conn->prepare("SELECT c.* FROM it_course c JOIN student_course sc ON c.id = sc.course_id WHERE sc.student_id = ?");
+$stmt = $conn->prepare("SELECT c.*, COALESCE(SUM(p.amount), 0) as total_paid, c.price as course_price 
+        FROM it_course c 
+        JOIN student_course sc ON c.id = sc.course_id 
+        LEFT JOIN payments p ON p.student_course_id = sc.id 
+        WHERE sc.student_id = ? 
+        GROUP BY c.id, sc.id");
 if (!$stmt) {
     die("Database query failed: " . $conn->error);
 }
@@ -43,6 +48,15 @@ $stmt1->bind_param("i", $student_id);
 $stmt1->execute();
 $result1 = $stmt1->get_result();
 $row1 = $result1->fetch_assoc();
+
+$total_course_price = 0;
+$total_amount_paid = 0;
+$courses_data = [];
+while ($course = $enrolled_courses->fetch_assoc()) {
+    $total_course_price += $course['course_price'];
+    $total_amount_paid += $course['total_paid'];
+    $courses_data[] = $course;
+}
 
 ?>
 
@@ -78,13 +92,15 @@ $row1 = $result1->fetch_assoc();
         <div class="row">
             <div class="col-md-3">
                 <div class="card">
-                    <?php if ($row1 && isset($row1['images'])): ?>
-                        <img src="../../public/picture/<?= htmlspecialchars($row1['images']); ?>" alt="Profile Picture" width="150" height="150" class="img-thumbnail">
-                    <?php else: ?>
-                        <img src="../../public/picture/default.jpg" alt="Default Profile Picture" width="150" height="150" class="img-thumbnail">
-                    <?php endif; ?>
+                    <div class="text-center p-3">
+                        <?php if ($row1 && !empty($row1['images'])): ?>
+                            <img src="../../public/picture/<?= htmlspecialchars($row1['images']); ?>" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        <?php else: ?>
+                            <img src="../../public/picture/default.jpg" alt="Default Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        <?php endif; ?>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title"><?= htmlspecialchars($student['fullname']); ?></h5>
+                        <h5 class="card-title" style="font-family: 'Roboto', sans-serif; font-weight: 300; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px;"><?= htmlspecialchars($student['fullname']); ?></h5>
                         <a href="views_profile.php?id=<?= $student_id; ?>" class="btn btn-primary btn-block">View Profile</a>
                     </div>
                 </div>
@@ -97,9 +113,9 @@ $row1 = $result1->fetch_assoc();
                             <div class="col-md-6">
                                 <a href="../courses/user_courseadd.php?student_id=<?= urlencode($student_id) ?>" class="btn btn-warning btn-sm btn-action"><i class="fa fa-plus-circle"></i> Add More Courses</a>
                             </div>
-                            <div class="col-md-6">
-                                <a href="#" class="btn btn-secondary btn-block mb-2">View Grades</a>
-                            </div>
+                            <!-- <div class="col-md-6">
+                                <a href="../messages/view_messages.php?student_id=<?= urlencode($student_id) ?>" class="btn btn-secondary btn-block mb-2"><i class="fa fa-envelope"></i> View Messages</a>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -108,20 +124,35 @@ $row1 = $result1->fetch_assoc();
                     <div class="card-body">
                         <h5 class="card-title">Your Enrolled Courses</h5>
                         <ul class="list-group">
-                            <?php while ($course = $enrolled_courses->fetch_assoc()): ?>
+                            <?php foreach ($courses_data as $course): ?>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <?= htmlspecialchars($course['title']); ?>
+                                    <span class="badge badge-primary badge-pill">Rs<?= number_format($course['course_price'], 2); ?></span>
                                 </li>
-                            <?php endwhile; ?>
+                            <?php endforeach; ?>
                         </ul>
+                        
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Payment Information</h5>
+                                <p class="card-text">Total Amount to pay: <span style="color: black;">Rs<?= number_format($total_course_price, 2); ?></span></p>
+                                <p class="card-text">Total Amount paid: <span style="color: green;">Rs<?= number_format($total_amount_paid, 2); ?></span></p>
+                                <p class="card-text">Remaining total Amount to be paid: <span style="color: red;">Rs<?= number_format($total_course_price - $total_amount_paid, 2); ?></span></p>
+                            </div>
+                        </div>
                         
                                                 <div class="card mt-4">
                                                     <div class="card-body">
-                                                        <h5 class="card-title">Payment Information</h5>
-                                                        <p class="card-text">Amount to be paid: $<?= number_format($amount_to_be_paid, 2); ?></p>
-                                                        <p class="card-text">Amount paid: $<?= number_format($amount_paid, 2); ?></p>
+                                                        <h5 class="card-title">Request Form</h5>
+                                                        <a href="../requests/request.php?student_id=<?= urlencode($student_id) ?>" class="btn btn-info btn-block mb-2">
+                                                            <i class="fa fa-envelope"></i> Make a Request
+                                                        </a>
+                                                        <a href="../requests/view_request.php?student_id=<?= urlencode($student_id) ?>" class="btn btn-success btn-block">
+                                                            <i class="fa fa-eye"></i> View Requests
+                                                        </a>
                                                     </div>
                                                 </div>
+                        
                         
                     </div>
                 </div>
