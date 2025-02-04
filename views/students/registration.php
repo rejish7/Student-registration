@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    // Validation
     if (empty($fullname) || strlen($fullname) < 2 || strlen($fullname) > 100) {
         $errors['fullname'] = "Full name is required and must be between 2 and 100 characters";
     }
@@ -143,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Display errors at the top of the form
 if (!empty($errors)) {
     echo "<div class='alert alert-danger'>";
     foreach ($errors as $error) {
