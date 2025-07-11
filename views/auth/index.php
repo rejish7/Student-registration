@@ -1,6 +1,7 @@
   <?php
     session_start();
     include '../../config/config.php';
+    include '../../config/url_helpers.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = trim($_POST['username']);
@@ -24,9 +25,9 @@
                     $_SESSION['username'] = $user['username'];
                     $_SESSION['role'] = $user['role'];
                     if ($user['role'] === 'admin') {
-                        header("Location:../../admin/dashboard.php");
+                        redirect_admin();
                     } else {
-                        header("Location:../students/student_dashboard.php");
+                        redirect('dashboard');
                     }
                     exit();
                 } else {
@@ -47,8 +48,8 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Login</title>
-      <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
-      <link rel="stylesheet" href="../../public/css/style.css">
+      <link rel="stylesheet" href="<?= asset_url('css/bootstrap.min.css') ?>">
+      <link rel="stylesheet" href="<?= asset_url('css/style.css') ?>">
   </head>
     <body class="bg-light">
         <div class="container">
@@ -78,7 +79,7 @@
                                     <button type="submit" class="btn btn-primary btn-lg">Login</button>
                                 </div>
                             </form>
-                            <p class="text-center mt-4">Don't have an account? <a href="../../views/students/registration.php" class="text-decoration-none">Sign up</a></p>
+                            <p class="text-center mt-4">Don't have an account? <a href="<?= frontend_student_url('register') ?>" class="text-decoration-none">Sign up</a></p>
                         </div>
                     </div>
                 </div>

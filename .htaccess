@@ -3,11 +3,80 @@
     Options +MultiViews
     Options -Indexes
 
+    # Admin routes
+    RewriteRule ^admin/?$ views/admin/dashboard.php [NC,L]
+    RewriteRule ^admin/login/?$ views/admin/index.php [NC,L]
+    RewriteRule ^admin/logout/?$ views/admin/logout.php [NC,L]
+    RewriteRule ^admin/signup/?$ views/admin/signup.php [NC,L]
+    
+    #users routes
+    RewriteRule ^admin/users/?$ views/admin/users/manage_users.php [NC,L]
+    RewriteRule ^admin/users/add/?$ views/admin/users/add_user.php [NC,L]
+    RewriteRule ^admin/users/edit/([0-9]+)/?$ views/admin/users/edit_user.php?id=$1 [NC,L]
+    RewriteRule ^admin/users/delete/([0-9]+)/?$ views/admin/users/delete_user.php?id=$1 [NC,L]
+
+    # Student routes
+    RewriteRule ^admin/students/?$ views/admin/students/index.php [NC,L]
+    RewriteRule ^admin/students/add/?$ views/admin/students/addstudent.php [NC,L]
+    RewriteRule ^students/register/?$ views/frontend/registration.php [NC,L]
+    RewriteRule ^students/login/?$ views/auth/index.php [NC,L]
+    RewriteRule ^admin/students/edit/([0-9]+)/?$ views/admin/students/edit.php?id=$1 [NC,L]
+    RewriteRule ^admin/students/view/([0-9]+)/?$ views/admin/students/view.php?id=$1 [NC,L]
+    RewriteRule ^admin/students/delete/([0-9]+)/?$ views/admin/students/delete.php?id=$1 [NC,L]
+    RewriteRule ^students/profile/([0-9]+)/?$ views/frontend/views_profile.php?id=$1 [NC,L]
+
+    # Course routes
+    RewriteRule ^admin/courses/?$ views/admin/courses/courses.php [NC,L]
+    RewriteRule ^admin/courses/add/?$ views/admin/courses/add_course.php [NC,L]
+    RewriteRule ^admin/courses/edit/([0-9]+)/?$ views/admin/courses/update_course.php?id=$1 [NC,L]
+    RewriteRule ^admin/courses/delete/([0-9]+)/?$ views/admin/courses/delete_course.php?id=$1 [NC,L]
+    RewriteRule ^admin/courses/enrolled/([0-9]+)/?$ views/admin/courses/enrolled_students.php?id=$1 [NC,L]
+
+    # Student course management
+    RewriteRule ^admin/students/([0-9]+)/courses/?$ views/admin/courses/views.php?id=$1 [NC,L]
+    RewriteRule ^admin/students/([0-9]+)/courses/add/?$ views/admin/courses/addmorecourses.php?student_id=$1 [NC,L]
+    RewriteRule ^admin/students/([0-9]+)/courses/delete/([0-9]+)/?$ views/admin/courses/viewsdelete.php?id=$1&scid=$2 [NC,L]
+    RewriteRule ^admin/students/([0-9]+)/courses/edit/([0-9]+)/?$ views/admin/courses/viewsedit.php?id=$1&scid=$2 [NC,L]
+
+    # Payment routes
+    RewriteRule ^admin/payments/([0-9]+)/course/([0-9]+)/?$ views/admin/payments/paymentviews.php?id=$1&scid=$2 [NC,L]
+    RewriteRule ^admin/payments/add/([0-9]+)/course/([0-9]+)/?$ views/admin/payments/addpayment.php?id=$1&scid=$2 [NC,L]
+    RewriteRule ^admin/payments/edit/([0-9]+)/course/([0-9]+)/?$ views/admin/payments/paymentedit.php?id=$1&scid=$2 [NC,L]
+    RewriteRule ^admin/payments/delete/([0-9]+)/course/([0-9]+)/?$ views/admin/payments/paymentdelete.php?id=$1&scid=$2 [NC,L]
+
+    # Request routes
+    RewriteRule ^admin/students/([0-9]+)/requests/?$ views/admin/requests/requestview.php?student_id=$1 [NC,L]
+    RewriteRule ^students/([0-9]+)/requests/add/?$ views/frontend/request.php?student_id=$1 [NC,L]
+    RewriteRule ^admin/students/([0-9]+)/requests/edit/([0-9]+)/?$ views/admin/requests/requestedit.php?student_id=$1&request_id=$2 [NC,L]
+    RewriteRule ^admin/students/([0-9]+)/requests/delete/([0-9]+)/?$ views/admin/requests/requestdelete.php?student_id=$1&request_id=$2 [NC,L]
+
+    # Auth routes
+    RewriteRule ^admin/login/?$ views/auth/index.php [NC,L]
+    RewriteRule ^admin/logout/?$ views/auth/logout.php [NC,L]
+
+    # Dashboard routes
+    RewriteRule ^dashboard/?$ views/frontend/student_dashboard.php [NC,L]
+
+    # Profile routes
+    RewriteRule ^profile/?$ views/frontend/views_profile.php [NC,L]
+    RewriteRule ^profile/([0-9]+)/?$ views/frontend/views_profile.php?id=$1 [NC,L]
+
+    # Home page
+    RewriteRule ^home/?$ index.php [NC,L]
+
+    # Remove .php extension from URLs (fallback)
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
-    RewriteRule ^([^/]+)/?$ $1.php [L]
+    # Prevent direct access to some sensitive directories
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^database\.php - [F,L]
 
-    RewriteRule ^page/([0-9]+)/?$ page.php?id=$1 [L]
-    RewriteRule ^@([^/]+)/?$ profile.php?username=$1 [L]
+    # Security headers
+    <IfModule mod_headers.c>
+        Header always set X-Content-Type-Options nosniff
+        Header always set X-Frame-Options DENY
+        Header always set X-XSS-Protection "1; mode=block"
+    </IfModule>
 </IfModule>

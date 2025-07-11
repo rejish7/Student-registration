@@ -3,5 +3,5 @@
 include '../../config/url_helpers.php';
 session_start();
 session_destroy();
-redirect('students/register');
+redirect('admin/login');
 ?>
