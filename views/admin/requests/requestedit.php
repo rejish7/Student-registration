@@ -189,9 +189,9 @@
           </div>
       </div>
 
-      <script src="../../public/js/jquery-3.3.1.min.js"></script>
-      <script src="../../public/js/popper.min.js"></script>
-      <script src="../../public/js/bootstrap.min.js"></script>
+      <script src="<?= asset_url('js/jquery-3.3.1.min.js') ?>"></script>
+      <script src="<?= asset_url('js/popper.min.js') ?>"></script>
+      <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
       <script>
           $(document).ready(function() {
               $('select[name="request_type"]').change(function() {

@@ -481,7 +481,7 @@ if (!empty($errors)) {
                 </button>
                 <h4>Add New Student</h4>
                 <div class="user-info">
-                    <img src="../../public/picture/profile.jpg" alt="Admin">
+                    <img src="<?= asset_url('picture/profile.jpg') ?>" alt="Admin">
                     <span><?php echo htmlspecialchars($admin_username ?? 'Admin'); ?></span>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 <?php
 include '../../../config/config.php';
+include '../../../config/url_helpers.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id = $_POST['student_id'];
@@ -27,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $check_stmt->close();
 
-    header("Location: ../students/student_dashboard.php");
+    redirect('dashboard');
     exit();
 }
 
@@ -35,7 +36,7 @@ $student_id = $_GET['student_id'] ?? '';
 
 if (!$student_id) {
     $_SESSION['error'] = "No student ID provided.";
-    header("Location: ../students/student_dashboard.php");
+    redirect('dashboard');
     exit();
 }
 
@@ -75,7 +76,7 @@ $courses_result = $courses_stmt->get_result();
         </form>
     </div>
 
-    <script src="../../public/js/jquery-3.3.1.min.js"></script>
-    <script src="../../public/js/bootstrap.min.js"></script>
+    <script src="<?= asset_url('js/jquery-3.3.1.min.js') ?>"></script>
+    <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
 </body>
 </html>

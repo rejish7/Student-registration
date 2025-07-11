@@ -180,7 +180,7 @@
                   <h5 class="card-title">Student Request Form</h5>
               </div>
               <div class="card-body">
-                  <form action="request.php" method="POST" enctype="multipart/form-data">
+                  <form action="<?php echo frontend_request_url($student_id, 'add'); ?>" method="POST" enctype="multipart/form-data">
                       <div class="form-group mb-3">
                           <label>Request Type</label>
                           <select name="request_type" class="form-control" required>

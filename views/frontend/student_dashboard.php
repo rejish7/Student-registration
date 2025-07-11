@@ -412,12 +412,12 @@ while ($course = $enrolled_courses->fetch_assoc()) {
                     </div>
                     <div class="card-body-modern">
                         <div class="action-buttons">
-                            <a href="<?php echo request_url($student_id, 'new'); ?>" 
+                            <a href="<?php echo frontend_request_url($student_id, 'add'); ?>" 
                                class="btn btn-info-modern btn-modern">
                                 <i class="fas fa-paper-plane me-2"></i>
                                 Make a Request
                             </a>
-                            <a href="<?php echo request_url($student_id); ?>" 
+                            <a href="<?php echo frontend_request_url($student_id, 'view'); ?>" 
                                class="btn btn-success-modern btn-modern">
                                 <i class="fas fa-eye me-2"></i>
                                 View Requests

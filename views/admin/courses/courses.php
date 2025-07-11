@@ -400,7 +400,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                 </button>
                 <h4>Student Registration System</h4>
                 <div class="user-info">
-                    <img src="../../public/picture/profile.jpg" alt="Admin">
+                    <img src="<?= asset_url('picture/profile.jpg') ?>" alt="Admin">
                     <span><?php echo htmlspecialchars($_SESSION['username']); ?></span>
                 </div>
             </div>
@@ -477,9 +477,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         <p>&copy; <?php echo date('Y'); ?> Student Registration Management System</p>
     </footer>
 
-    <script src="../../public/js/jquery-3.3.1.min.js"></script>
-    <script src="../../public/js/popper.min.js"></script>
-    <script src="../public/js/bootstrap.min.js"></script>
+    <script src="<?= asset_url('js/jquery-3.3.1.min.js') ?>"></script>
+    <script src="<?= asset_url('js/popper.min.js') ?>"></script>
+    <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
     <script>
         $(document).ready(function() {
             // Toggle sidebar on mobile

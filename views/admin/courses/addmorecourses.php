@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $check_stmt->close();
 
-    header("Location: views.php?id=" . urlencode($student_id));
+    redirect("admin/students/{$student_id}/courses");
     exit();
 }
 
@@ -60,7 +60,7 @@ $student_id = $_GET['student_id'] ?? '';
 
 if (!$student_id) {
     $_SESSION['error'] = "No student ID provided.";
-    header("Location: views.php?id=" . urlencode($student_id));
+    redirect('admin/students');
     exit();
 }
 
@@ -434,7 +434,7 @@ $courses_result = $courses_stmt->get_result();
                 </button>
                 <h4>Add More Courses</h4>
                 <div class="user-info">
-                    <img src="../../public/picture/profile.jpg" alt="Admin">
+                    <img src="<?= asset_url('picture/profile.jpg') ?>" alt="Admin">
                     <span><?php echo htmlspecialchars($admin_username ?? 'Admin'); ?></span>
                 </div>
             </div>
@@ -504,9 +504,9 @@ $courses_result = $courses_stmt->get_result();
         <p>&copy; <?php echo date('Y'); ?> Student Registration Management System</p>
     </footer>
 
-    <script src="../../public/js/jquery-3.3.1.min.js"></script>
-    <script src="../../public/js/popper.min.js"></script>
-    <script src="../../public/js/bootstrap.min.js"></script>
+    <script src="<?= asset_url('js/jquery-3.3.1.min.js') ?>"></script>
+    <script src="<?= asset_url('js/popper.min.js') ?>"></script>
+    <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
     <script>
         $(document).ready(function() {
             // Toggle sidebar on mobile

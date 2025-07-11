@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
     $user = $result->fetch_assoc();
     $stmt->close();
 } else {
-    header("Location: manage_users.php");
+    header("Location: " . user_url());
     exit();
 }
 

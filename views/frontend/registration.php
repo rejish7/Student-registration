@@ -424,7 +424,7 @@ if (!empty($errors)) {
                                 </div>
                             </div>
 
-                            <form action="registration.php" method="post" enctype="multipart/form-data" id="registrationForm">
+                            <form action="<?php echo frontend_student_url('register'); ?>" method="post" enctype="multipart/form-data" id="registrationForm">
                                 <!-- Section 1: Account Details -->
                                 <div class="form-section active" id="section1">
                                     <h4 class="mb-4">Account Details</h4>

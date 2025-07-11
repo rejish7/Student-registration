@@ -98,6 +98,15 @@ function request_url($student_id, $action = '', $request_id = '') {
     return base_url($url);
 }
 
+function frontend_request_url($student_id, $action = '', $request_id = '') {
+    if ($action === 'add' || $action === 'new') {
+        return base_url("students/{$student_id}/requests/add");
+    } elseif ($action === 'view') {
+        return base_url("admin/students/{$student_id}/requests");
+    }
+    return base_url("admin/students/{$student_id}/requests");
+}
+
 function payment_url($student_id, $course_id, $action = '') {
     if ($action) {
         return base_url("admin/payments/{$action}/{$student_id}/course/{$course_id}");
@@ -120,6 +129,13 @@ function profile_url($id = '') {
 }
 
 function dashboard_url() {
+    return base_url("dashboard");
+}
+
+function frontend_dashboard_url($user_id = '') {
+    if ($user_id) {
+        return base_url("dashboard?user_id={$user_id}");
+    }
     return base_url("dashboard");
 }
 

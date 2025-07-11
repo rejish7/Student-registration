@@ -59,9 +59,9 @@
               <div class="col-md-3">
                   <div class="card">
                       <?php if ($student['images']): ?>
-                          <img src="../../public/picture/<?= htmlspecialchars($student['images']); ?>" alt="Profile Picture" width="150" height="150" class="img-thumbnail">
+                          <img src="<?= asset_url('picture/' . htmlspecialchars($student['images'])) ?>" alt="Profile Picture" width="150" height="150" class="img-thumbnail">
                       <?php else: ?>
-                          <img src="../../public/picture/default.jpg" alt="Default Profile Picture" width="150" height="150" class="img-thumbnail">
+                          <img src="<?= asset_url('picture/default.jpg') ?>" alt="Default Profile Picture" width="150" height="150" class="img-thumbnail">
                       <?php endif; ?>
                       <div class="card-body">
                           <h5 class="card-title"><?= htmlspecialchars($student['fullname']); ?></h5>

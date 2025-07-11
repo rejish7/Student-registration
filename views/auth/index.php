@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <script src="/js/bootstrap.min.js"></script>
+        <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
         
     </body>
   </html>
